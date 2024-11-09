@@ -1,5 +1,9 @@
 from fastapi import APIRouter, Depends, status
-from ..serializers.vehicles_serializer import VehiclesListResponse, Vehicles, VehiclesIDModel
+from ..serializers.vehicles_serializer import (
+    VehiclesListResponse,
+    Vehicles,
+    VehiclesIDModel,
+)
 from ..services.vehicles_service import get_vehicles, get_vehicle_by_id
 
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
