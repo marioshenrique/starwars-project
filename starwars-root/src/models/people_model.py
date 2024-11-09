@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Person(BaseModel):
     name: Optional[str]
     height: Optional[str]
@@ -19,9 +20,11 @@ class Person(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class PeopleListResponse(BaseModel):
     count: int
     peoples: List[Person]
+
 
 class PeopleIDModel(BaseModel):
     people_id: int = Field(..., ge=1)

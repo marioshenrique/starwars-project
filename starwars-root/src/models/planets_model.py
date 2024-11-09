@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Planet(BaseModel):
     name: Optional[str]
     rotation_period: Optional[str]
@@ -17,9 +18,11 @@ class Planet(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class PlanetListResponse(BaseModel):
     count: int
     planets: List[Planet]
+
 
 class PlanetIDModel(BaseModel):
     planet_id: int = Field(..., ge=1)

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Vehicles(BaseModel):
     name: Optional[str]
     model: Optional[str]
@@ -19,9 +20,11 @@ class Vehicles(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class VehiclesListResponse(BaseModel):
     count: int
     vehicles: List[Vehicles]
+
 
 class VehiclesIDModel(BaseModel):
     vehicle_id: int = Field(..., ge=1)

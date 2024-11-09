@@ -3,8 +3,9 @@ import httpx
 from src.config import API_BASE_URL
 from .service import get_data_list, get_data
 
+
 async def get_starships():
-    url = API_BASE_URL+"starships/"
+    url = API_BASE_URL + "starships/"
     data = {"starships": []}
     next = url
     while next is not None:
@@ -13,6 +14,7 @@ async def get_starships():
         for s in starships:
             data["starships"].append(s)
     return data
+
 
 async def get_starship_by_id(starship_id: int):
     url = f"{API_BASE_URL}starships/{starship_id}/"

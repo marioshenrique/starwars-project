@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Film(BaseModel):
     title: Optional[str]
     episode_id: Optional[int]
@@ -17,9 +18,11 @@ class Film(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class FilmList(BaseModel):
     count: int
     films: List
+
 
 class FilmIDModel(BaseModel):
     film_id: int = Field(..., ge=1)

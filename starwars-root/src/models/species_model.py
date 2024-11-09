@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Specie(BaseModel):
     name: Optional[str]
     classification: Optional[str]
@@ -18,9 +19,11 @@ class Specie(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class SpeciesListResponse(BaseModel):
     count: int
     species: List[Specie]
+
 
 class SpecieIDModel(BaseModel):
     specie_id: int = Field(..., ge=1)

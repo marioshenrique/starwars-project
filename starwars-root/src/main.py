@@ -16,18 +16,20 @@ from src.exception_handlers import (
     httpx_request_error_handler,
     validation_exception_handler,
     response_validation_exception_handler,
-    request_validation_exception_handler
+    request_validation_exception_handler,
 )
 
 app = FastAPI(
-    title = "Power of Data - Star Wars Project",
-    description = "API para consulta de dados de filmes, personagens, planetas e naves de Star Wars",
-    version = "1.0.0"
+    title="Power of Data - Star Wars Project",
+    description="API para consulta de dados de filmes, personagens, planetas e naves de Star Wars",
+    version="1.0.0",
 )
+
 
 @app.get("/")
 async def root():
     return {"message": "Hello World!"}
+
 
 app.include_router(films_controller.router)
 app.include_router(people_controller.router)
@@ -40,6 +42,8 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(httpx.HTTPStatusError, httpx_http_status_error_handler)
 app.add_exception_handler(StarletteHTTPException, starlette_http_exception_handler)
 app.add_exception_handler(httpx.RequestError, httpx_request_error_handler)
-app.add_exception_handler(ValidationError,validation_exception_handler)
-app.add_exception_handler(ResponseValidationError, response_validation_exception_handler)
+app.add_exception_handler(ValidationError, validation_exception_handler)
+app.add_exception_handler(
+    ResponseValidationError, response_validation_exception_handler
+)
 app.add_exception_handler(RequestValidationError, request_validation_exception_handler)

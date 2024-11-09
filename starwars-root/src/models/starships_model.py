@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class Starship(BaseModel):
     name: Optional[str]
     model: Optional[str]
@@ -21,9 +22,11 @@ class Starship(BaseModel):
     edited: Optional[str]
     url: Optional[str]
 
+
 class StarshipsListResponse(BaseModel):
     count: int
     starships: List[Starship]
+
 
 class StarshipIDModel(BaseModel):
     starship_id: int = Field(..., ge=1)
