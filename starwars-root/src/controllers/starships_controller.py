@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
-from src.models.starships_model import StarshipsListResponse, Starship, StarshipIDModel
-from src.services.starships_service import get_starships, get_starship_by_id
+from ..serializers.starships_serializer import StarshipsListResponse, Starship, StarshipIDModel
+from ..services.starships_service import get_starships, get_starship_by_id
 
 router = APIRouter(prefix="/starships", tags=["starships"])
 

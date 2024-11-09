@@ -13,7 +13,7 @@ class ErrorResponse(BaseModel):
 
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
-        status_code=exc.status_code, content=ErrorResponse(exc.detail).dict()
+        status_code=exc.status_code, content=ErrorResponse(detail=exc.detail).dict()
     )
 
 

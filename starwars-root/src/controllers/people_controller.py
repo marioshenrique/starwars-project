@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
-from src.models.people_model import PeopleListResponse, Person, PeopleIDModel
-from src.services.people_service import get_peoples, get_people_by_id
+from ..serializers.people_serializer import PeopleListResponse, Person, PeopleIDModel
+from ..services.people_service import get_peoples, get_people_by_id
 
 router = APIRouter(prefix="/people", tags=["people"])
 

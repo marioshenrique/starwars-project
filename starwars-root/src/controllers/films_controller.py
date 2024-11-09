@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
-from src.models.films_model import FilmList, Film, FilmIDModel
-from src.services.films_service import get_films, get_film_by_id
+from ..serializers.films_serializer import FilmList, Film, FilmIDModel
+from ..services.films_service import get_films, get_film_by_id
 
 router = APIRouter(prefix="/films", tags=["films"])
 

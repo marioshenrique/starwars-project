@@ -3,13 +3,14 @@ from fastapi.exceptions import ResponseValidationError, RequestValidationError
 import httpx
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import ValidationError
-from src.controllers import films_controller
-from src.controllers import people_controller
-from src.controllers import planets_controller
-from src.controllers import species_controller
-from src.controllers import starships_controller
-from src.controllers import vehicles_controller
-from src.exception_handlers import (
+from .controllers import user_controller
+from .controllers import films_controller
+from .controllers import people_controller
+from .controllers import planets_controller
+from .controllers import species_controller
+from .controllers import starships_controller
+from .controllers import vehicles_controller
+from .exception_handlers import (
     http_exception_handler,
     httpx_http_status_error_handler,
     starlette_http_exception_handler,
@@ -25,12 +26,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World!"}
-
-
+app.include_router(user_controller.router)
 app.include_router(films_controller.router)
 app.include_router(people_controller.router)
 app.include_router(planets_controller.router)
