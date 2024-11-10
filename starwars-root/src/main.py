@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import ResponseValidationError, RequestValidationError
+from mangum import Mangum
 import httpx
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import ValidationError
@@ -25,6 +26,7 @@ app = FastAPI(
     description="API para consulta de dados de filmes, personagens, planetas e naves de Star Wars",
     version="1.0.0",
 )
+handler = Mangum(app)
 
 app.include_router(user_controller.router)
 app.include_router(films_controller.router)

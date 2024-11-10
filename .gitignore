@@ -2,3 +2,7 @@ venv
 
 starwars-root/.env
 starwars-root/data/users.db
+lib
+function.zip
+python
+python.zip
