@@ -9,10 +9,10 @@ router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.post("/login")
-async def login_user(request: LoginRequest, db: Session = Depends(get_db)):
+async def login_user(request: LoginRequest = Depends(), db: Session = Depends(get_db)):
     return login(db, request)
 
 
 @router.post("/register")
-async def register(request: RegisterRequest, db: Session = Depends(get_db)):
+async def register(request: RegisterRequest = Depends(), db: Session = Depends(get_db)):
     return register_user(db, request)

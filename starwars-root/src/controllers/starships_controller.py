@@ -5,15 +5,19 @@ from ..serializers.starships_serializer import (
     StarshipIDModel,
 )
 from ..services.starships_service import get_starships, get_starship_by_id
+from ..serializers.user_serializer import SafeUser
+from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/starships", tags=["starships"])
 
 
 @router.get("/", response_model=StarshipsListResponse)
-async def list_starships():
+async def list_starships(client: SafeUser = Depends(get_client_user)):
     return await get_starships()
 
 
 @router.get("/{starship_id}/", response_model=Starship)
-async def get_starship(starship: StarshipIDModel = Depends()):
+async def get_starship(
+    starship: StarshipIDModel = Depends(), client: SafeUser = Depends(get_client_user)
+):
     return await get_starship_by_id(starship.starship_id)

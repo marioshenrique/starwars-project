@@ -48,7 +48,7 @@ def test_login_success(db_session):
         email=register_request.email, password=register_request.password
     )
     response = login(db_session, login_request)
-    assert response == {"message": "Login successful"}
+    assert response["message"] == "Login successful"
 
 
 def test_login_incorrect_email(db_session):

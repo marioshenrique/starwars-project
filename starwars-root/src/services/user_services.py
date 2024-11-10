@@ -1,10 +1,20 @@
+import jwt
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from ..models.user_model import User
 from ..utils.security import hash_password
-from ..config import SessionLocal
+from ..config import SessionLocal, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from ..serializers.user_serializer import LoginRequest, RegisterRequest
 from ..utils.security import verify_password
+
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encode_jwt
 
 
 def create_user(db: Session, email: str, password: str):
@@ -33,4 +43,5 @@ def login(db: Session, request: LoginRequest):
         raise HTTPException(status_code=401, detail="incorrect credentials")
     if not verify_password(request.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="incorrect credentials")
-    return {"message": "Login successful"}
+    token = create_access_token(data={"sub": user.email})
+    return {"message": "Login successful", "access_token": token}
