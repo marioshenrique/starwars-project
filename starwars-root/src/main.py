@@ -11,7 +11,6 @@ from .controllers import planets_controller
 from .controllers import species_controller
 from .controllers import starships_controller
 from .controllers import vehicles_controller
-from fastapi.middleware.cors import CORSMiddleware
 from .exception_handlers import (
     http_exception_handler,
     httpx_http_status_error_handler,
@@ -28,14 +27,6 @@ app = FastAPI(
     version="1.0.0",
 )
 handler = Mangum(app)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
 
 app.include_router(user_controller.router)
 app.include_router(films_controller.router)

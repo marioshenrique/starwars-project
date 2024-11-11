@@ -7,12 +7,12 @@ from ..dependencies.user_dependencies import get_client_user
 router = APIRouter(prefix="/films", tags=["films"])
 
 
-@router.get("/", response_model=FilmList)
+@router.get("", response_model=FilmList)
 async def list_films(client: SafeUser = Depends(get_client_user)):
     return await get_films()
 
 
-@router.get("/{film_id}/", response_model=Film)
+@router.get("/{film_id}", response_model=Film)
 async def get_film(
     film: FilmIDModel = Depends(), client: SafeUser = Depends(get_client_user)
 ):

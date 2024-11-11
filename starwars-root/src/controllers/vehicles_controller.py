@@ -11,12 +11,12 @@ from ..dependencies.user_dependencies import get_client_user
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
 
-@router.get("/", response_model=VehiclesListResponse)
+@router.get("", response_model=VehiclesListResponse)
 async def list_vehicles(client: SafeUser = Depends(get_client_user)):
     return await get_vehicles()
 
 
-@router.get("/{vehicle_id}/", response_model=Vehicles)
+@router.get("/{vehicle_id}", response_model=Vehicles)
 async def get_vehicle(
     vehicle: VehiclesIDModel = Depends(), client: SafeUser = Depends(get_client_user)
 ):

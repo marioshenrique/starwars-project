@@ -7,12 +7,12 @@ from ..dependencies.user_dependencies import get_client_user
 router = APIRouter(prefix="/people", tags=["people"])
 
 
-@router.get("/", response_model=PeopleListResponse)
+@router.get("", response_model=PeopleListResponse)
 async def list_people(client: SafeUser = Depends(get_client_user)):
     return await get_peoples()
 
 
-@router.get("/{people_id}/", response_model=Person)
+@router.get("/{people_id}", response_model=Person)
 async def get_people(
     people: PeopleIDModel = Depends(), client: SafeUser = Depends(get_client_user)
 ):
