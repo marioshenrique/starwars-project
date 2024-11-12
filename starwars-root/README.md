@@ -18,7 +18,52 @@ O projeto StarWars é uma API RESTful desenvolvida em Python que utiliza a [SWAP
 
 ## Arquitetura da Solução
 
-A arquitetura do projeto foi desenvolvida seguidos os princípios de separação de responsabilidades e modularização, utilizando AWS Lambda e API gateway para hospedagem serverless. A comunicação com a SWAPI é feita através de requisições HTTP, e os dados de usuários são armazenados em um banco de dados PostgreSQL externo.
+A arquitetura do projeto foi desenvolvida seguidos os princípios de separação de responsabilidades e modularização, utilizando AWS Lambda e API gateway para hospedagem serverless. 
+
+### Arquitetura Geral
+
+![Arquitetura Geral](img/general-architecture-edited.png)
+
+![Arquitetura Geral](img/general-architecture.png)
+
+O diagrama acima apresenta a arquitetura geral do projeto. A aplicação é estruturada em uma arquitetura serverless, onde o processamento é feito utilizando o AWS Lambda, e a comunicação realizada pelo API Gateway.
+
+A arquitetura apresenta os seguintes componentes:
+
+- Usuários e aplicações:
+
+    - Usuários: representa os usuários finais que acessam a API por meio de navegadores ou aplicativos móveis.
+
+    - Aplicações: sistemas externos que consomem a API.
+
+    Esses clientes fazem requisiçõies HTTP que são enviadas ao API Gateway para processamento.
+
+- API Gateway:
+
+    Atua como ponto de entrada da aplicação, recebendo as requisições. Neste projeto, a API Gateway tem como função principal o roteamento de requisições, direcionando cada requisição para a função Lambda que está executando a aplicação FastAPI.
+
+    Após receber uma requisição, o API Gateway a envia para a aplicação FastAPAI no ambiente AWS Lambda.
+
+- AWS Lambda:
+
+    Ambiente serverless responsável pela execução da aplicação FastAPI.
+
+- Aplicação FastAPI:
+
+    Representa o núcleo da lógica de negócio do projeto, responsável por processar as requisições e fornecer respostas aos usuários e aplicações. Suas responsabilidades incluem:
+
+    - Interação com o banco de dados PostgreSQL.
+
+    - Integração com a API SWAPI.
+
+- Banco de dados PostgreSQL:
+
+    Utilizado para armazenar dados dos usuários.
+
+- API SWAPI:
+
+    A aplicação FastAPI faz requisições para SWAPI para obter informações sobre o universo Star Wars.
+
 
 (INSERIR DIAGRAMA DA ARQUITETURA DO PROJETO)
 
