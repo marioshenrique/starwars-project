@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
-from ..schemas.user_schemas import LoginRequest, RegisterRequest, LoginResponse, RegisterResponse
+from ..schemas.user_schemas import (
+    LoginRequest,
+    RegisterRequest,
+    LoginResponse,
+    RegisterResponse,
+)
 from ..config import SessionLocal
 from ..services.user_services import login, register_user
 from ..dependencies.database_dependencies import get_db

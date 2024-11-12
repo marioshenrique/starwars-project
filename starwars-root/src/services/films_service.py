@@ -19,3 +19,16 @@ async def get_films():
 async def get_film_by_id(film_id: int):
     url = f"{API_BASE_URL}films/{film_id}/"
     return await get_data(url)
+
+
+async def get_characters_by_film(film_id: int):
+    url = f"{API_BASE_URL}films/{film_id}/"
+    data = {}
+    film_data = await get_data(url)
+    data["count"] = int(len(film_data["characters"]))
+    data["characters"] = []
+    for c in film_data["characters"]:
+        url = c
+        character_data = await get_data(url)
+        data["characters"].append(character_data)
+    return data

@@ -25,7 +25,7 @@ app = FastAPI(
     title="Power of Data - Star Wars Project",
     description="API para consulta de dados de filmes, personagens, planetas e naves de Star Wars",
     version="1.0.0",
-    root_path="/dev"
+    root_path="/dev",
 )
 handler = Mangum(app)
 
