@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..serializers.people_serializer import PeopleListResponse, Person, PeopleIDModel
+from ..schemas.people_schemas import PeopleListResponse, Person, PeopleIDModel
 from ..services.people_service import get_peoples, get_people_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/people", tags=["people"])

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, status
-from ..serializers.vehicles_serializer import (
+from ..schemas.vehicles_schemas import (
     VehiclesListResponse,
     Vehicles,
     VehiclesIDModel,
 )
 from ..services.vehicles_service import get_vehicles, get_vehicle_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])

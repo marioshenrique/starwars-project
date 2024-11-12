@@ -21,7 +21,7 @@ class Film(BaseModel):
 
 class FilmList(BaseModel):
     count: int
-    films: List
+    films: List[Film]
 
 
 class FilmIDModel(BaseModel):

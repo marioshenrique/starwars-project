@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..serializers.planets_serializer import PlanetListResponse, Planet, PlanetIDModel
+from ..schemas.planets_schemas import PlanetListResponse, Planet, PlanetIDModel
 from ..services.planets_service import get_planets, get_planet_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/planets", tags=["planets"])

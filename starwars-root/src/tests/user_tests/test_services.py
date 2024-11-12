@@ -8,7 +8,7 @@ from src.services.user_services import (
 )
 from src.utils.security import verify_password
 from src.models.user_model import User
-from src.serializers.user_serializer import RegisterRequest, LoginRequest
+from src.schemas.user_schemas import RegisterRequest, LoginRequest
 
 
 def test_create_user_and_test_get_user_by_email(db_session):

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..serializers.starships_serializer import (
+from ..schemas.starships_schemas import (
     StarshipsListResponse,
     Starship,
     StarshipIDModel,
 )
 from ..services.starships_service import get_starships, get_starship_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/starships", tags=["starships"])

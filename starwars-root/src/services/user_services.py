@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from ..models.user_model import User
 from ..utils.security import hash_password
 from ..config import SessionLocal, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
-from ..serializers.user_serializer import LoginRequest, RegisterRequest
+from ..schemas.user_schemas import LoginRequest, RegisterRequest
 from ..utils.security import verify_password
 
 

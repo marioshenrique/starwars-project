@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..serializers.species_serializer import SpeciesListResponse, Specie, SpecieIDModel
+from ..schemas.species_schemas import SpeciesListResponse, Specie, SpecieIDModel
 from ..services.species_service import get_species, get_specie_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/species", tags=["species"])

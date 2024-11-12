@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..serializers.films_serializer import FilmList, Film, FilmIDModel
+from ..schemas.films_schemas import FilmList, Film, FilmIDModel
 from ..services.films_service import get_films, get_film_by_id
-from ..serializers.user_serializer import SafeUser
+from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/films", tags=["films"])

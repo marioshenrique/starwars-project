@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
-from ..serializers.user_serializer import LoginRequest, RegisterRequest
+from ..schemas.user_schemas import LoginRequest, RegisterRequest, LoginResponse, RegisterResponse
 from ..config import SessionLocal
 from ..services.user_services import login, register_user
 from ..dependencies.database_dependencies import get_db
@@ -8,11 +8,11 @@ from ..dependencies.database_dependencies import get_db
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 async def login_user(request: LoginRequest = Depends(), db: Session = Depends(get_db)):
     return login(db, request)
 
 
-@router.post("/register")
+@router.post("/register", response_model=RegisterResponse)
 async def register(request: RegisterRequest = Depends(), db: Session = Depends(get_db)):
     return register_user(db, request)
