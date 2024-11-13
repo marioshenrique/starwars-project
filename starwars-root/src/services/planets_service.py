@@ -1,11 +1,14 @@
 import httpx
 
 from ..config import API_BASE_URL
-from .service import get_data_list, get_data
+from ..repository.repository import get_data_list, get_data
+from .service import get_correlated_data
+
+ENDPOINT_API_URL = f"{API_BASE_URL}/planets"
 
 
 async def get_planets():
-    url = API_BASE_URL + "planets/"
+    url = ENDPOINT_API_URL
     data = {"planets": []}
     next = url
     while next is not None:
@@ -17,5 +20,11 @@ async def get_planets():
 
 
 async def get_planet_by_id(planet_id: int):
-    url = f"{API_BASE_URL}planets/{planet_id}/"
+    url = f"{ENDPOINT_API_URL}/{planet_id}/"
     return await get_data(url)
+
+
+async def get_residents_by_planet(planet_id: int):
+    url = f"{ENDPOINT_API_URL}/{planet_id}/"
+    data = await get_correlated_data(url=url, data_label="residents")
+    return data

@@ -4,10 +4,12 @@ from src.services.vehicles_service import get_vehicles, get_vehicle_by_id
 from .fixtures import mock_vehicle_data, mock_vehicles_data
 from src.config import API_BASE_URL
 
+ENDPOINT_API_URL = f"{API_BASE_URL}/vehicles"
+
 
 @pytest.mark.asyncio
 async def test_get_vehicles_success(httpx_mock, mock_vehicles_data):
-    url = f"{API_BASE_URL}vehicles/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, json=mock_vehicles_data, status_code=200)
 
     result = await get_vehicles()
@@ -19,7 +21,7 @@ async def test_get_vehicles_success(httpx_mock, mock_vehicles_data):
 
 @pytest.mark.asyncio
 async def test_get_vehicles_server_error(httpx_mock):
-    url = f"{API_BASE_URL}vehicles/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -30,7 +32,7 @@ async def test_get_vehicles_server_error(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_vehicles_by_id_success(httpx_mock, mock_vehicle_data):
     vehicle_id = 4
-    url = f"{API_BASE_URL}vehicles/{vehicle_id}/"
+    url = f"{ENDPOINT_API_URL}/{vehicle_id}/"
     httpx_mock.add_response(url=url, json=mock_vehicle_data, status_code=200)
 
     result = await get_vehicle_by_id(vehicle_id)
@@ -42,7 +44,7 @@ async def test_get_vehicles_by_id_success(httpx_mock, mock_vehicle_data):
 @pytest.mark.asyncio
 async def test_get_vehicle_by_id_not_found(httpx_mock):
     vehicle_id = 999
-    url = f"{API_BASE_URL}vehicles/{vehicle_id}/"
+    url = f"{ENDPOINT_API_URL}/{vehicle_id}/"
     httpx_mock.add_response(url=url, status_code=404)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -53,7 +55,7 @@ async def test_get_vehicle_by_id_not_found(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_vehicle_by_id_server_error(httpx_mock):
     vehicle_id = 1
-    url = f"{API_BASE_URL}vehicles/{vehicle_id}/"
+    url = f"{ENDPOINT_API_URL}/{vehicle_id}/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

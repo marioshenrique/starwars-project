@@ -1,6 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..schemas.species_schemas import SpeciesListResponse, Specie, SpecieIDModel
-from ..services.species_service import get_species, get_specie_by_id
+from ..schemas.species_schemas import (
+    SpeciesListResponse,
+    Specie,
+    SpecieIDModel,
+    FilmsSpecie,
+    PeopleSpecie,
+)
+from ..services.species_service import (
+    get_species,
+    get_specie_by_id,
+    get_films_by_specie,
+    get_people_by_specie,
+)
 from ..schemas.user_schemas import SafeUser
 from ..dependencies.user_dependencies import get_client_user
 
@@ -17,3 +28,17 @@ async def get_specie(
     specie: SpecieIDModel = Depends(), client: SafeUser = Depends(get_client_user)
 ):
     return await get_specie_by_id(specie.specie_id)
+
+
+@router.get("/{specie_id}/people", response_model=PeopleSpecie)
+async def get_people(
+    specie: SpecieIDModel = Depends(), client: SafeUser = Depends(get_client_user)
+):
+    return await get_people_by_specie(specie.specie_id)
+
+
+@router.get("/{specie_id}/films", response_model=FilmsSpecie)
+async def get_films(
+    specie: SpecieIDModel = Depends(), client: SafeUser = Depends(get_client_user)
+):
+    return await get_films_by_specie(specie.specie_id)

@@ -4,10 +4,12 @@ from src.services.planets_service import get_planet_by_id, get_planets
 from .fixtures import mock_planet_data, mock_planets_data
 from src.config import API_BASE_URL
 
+ENDPOINT_API_URL = f"{API_BASE_URL}/planets"
+
 
 @pytest.mark.asyncio
 async def test_get_planets_success(httpx_mock, mock_planets_data):
-    url = f"{API_BASE_URL}planets/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, json=mock_planets_data, status_code=200)
 
     result = await get_planets()
@@ -19,7 +21,7 @@ async def test_get_planets_success(httpx_mock, mock_planets_data):
 
 @pytest.mark.asyncio
 async def test_get_planets_server_error(httpx_mock):
-    url = f"{API_BASE_URL}planets/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -30,7 +32,7 @@ async def test_get_planets_server_error(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_planet_by_id_success(httpx_mock, mock_planet_data):
     planet_id = 6
-    url = f"{API_BASE_URL}planets/{planet_id}/"
+    url = f"{ENDPOINT_API_URL}/{planet_id}/"
     httpx_mock.add_response(url=url, json=mock_planet_data, status_code=200)
 
     result = await get_planet_by_id(planet_id)
@@ -42,7 +44,7 @@ async def test_get_planet_by_id_success(httpx_mock, mock_planet_data):
 @pytest.mark.asyncio
 async def test_get_planet_by_id_not_found(httpx_mock):
     planet_id = 999
-    url = f"{API_BASE_URL}planets/{planet_id}/"
+    url = f"{ENDPOINT_API_URL}/{planet_id}/"
     httpx_mock.add_response(url=url, status_code=404)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -53,7 +55,7 @@ async def test_get_planet_by_id_not_found(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_planet_by_id_server_error(httpx_mock):
     planet_id = 1
-    url = f"{API_BASE_URL}planets/{planet_id}/"
+    url = f"{ENDPOINT_API_URL}/{planet_id}/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

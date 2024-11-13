@@ -1,11 +1,13 @@
 import httpx
 
 from ..config import API_BASE_URL
-from .service import get_data_list, get_data
+from ..repository.repository import get_data_list, get_data
+
+ENDPOINT_API_URL = f"{API_BASE_URL}/vehicles"
 
 
 async def get_vehicles():
-    url = API_BASE_URL + "vehicles/"
+    url = ENDPOINT_API_URL
     data = {"vehicles": []}
     next = url
     while next is not None:
@@ -17,6 +19,6 @@ async def get_vehicles():
 
 
 async def get_vehicle_by_id(vehicle_id: int):
-    url = f"{API_BASE_URL}vehicles/{vehicle_id}/"
+    url = f"{ENDPOINT_API_URL}/{vehicle_id}/"
     vehicle_data = await get_data(url)
     return vehicle_data

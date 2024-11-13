@@ -4,10 +4,12 @@ from src.services.people_service import get_peoples, get_people_by_id
 from .fixtures import mock_people_data, mock_peoples_data
 from src.config import API_BASE_URL
 
+ENDPOINT_API_URL = f"{API_BASE_URL}/people"
+
 
 @pytest.mark.asyncio
 async def test_get_peoples_success(httpx_mock, mock_peoples_data):
-    url = f"{API_BASE_URL}people/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, json=mock_peoples_data, status_code=200)
 
     result = await get_peoples()
@@ -19,7 +21,7 @@ async def test_get_peoples_success(httpx_mock, mock_peoples_data):
 
 @pytest.mark.asyncio
 async def test_get_peoples_server_error(httpx_mock):
-    url = f"{API_BASE_URL}people/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -30,7 +32,7 @@ async def test_get_peoples_server_error(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_people_by_id_success(httpx_mock, mock_people_data):
     people_id = 1
-    url = f"{API_BASE_URL}people/{people_id}/"
+    url = f"{ENDPOINT_API_URL}/{people_id}/"
     httpx_mock.add_response(url=url, json=mock_people_data, status_code=200)
 
     result = await get_people_by_id(people_id)
@@ -42,7 +44,7 @@ async def test_get_people_by_id_success(httpx_mock, mock_people_data):
 @pytest.mark.asyncio
 async def test_get_people_by_id_not_found(httpx_mock):
     people_id = 9999
-    url = f"{API_BASE_URL}people/{people_id}/"
+    url = f"{ENDPOINT_API_URL}/{people_id}/"
     httpx_mock.add_response(url=url, status_code=404)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -53,7 +55,7 @@ async def test_get_people_by_id_not_found(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_people_by_id_server_error(httpx_mock):
     people_id = 1
-    url = f"{API_BASE_URL}people/{people_id}/"
+    url = f"{ENDPOINT_API_URL}/{people_id}/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

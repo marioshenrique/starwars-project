@@ -1,11 +1,14 @@
 import httpx
 
 from ..config import API_BASE_URL
-from .service import get_data_list, get_data
+from ..repository.repository import get_data_list, get_data
+from .service import get_correlated_data
+
+ENDPOINT_API_URL = f"{API_BASE_URL}/people"
 
 
 async def get_peoples():
-    url = API_BASE_URL + "people/"
+    url = ENDPOINT_API_URL
     data = {"peoples": []}
     next = url
     while next is not None:
@@ -17,18 +20,11 @@ async def get_peoples():
 
 
 async def get_people_by_id(people_id: int):
-    url = f"{API_BASE_URL}people/{people_id}/"
+    url = f"{ENDPOINT_API_URL}/{people_id}/"
     return await get_data(url)
 
 
 async def get_vehicles_by_people(people_id: int):
-    url = f"{API_BASE_URL}people/{people_id}/"
-    data = {}
-    people_data = await get_data(url)
-    data["count"] = int(len(people_data["vehicles"]))
-    data["vehicles"] = []
-    for c in people_data["vehicles"]:
-        url = c
-        vehicle_data = await get_data(url)
-        data["vehicles"].append(vehicle_data)
+    url = f"{ENDPOINT_API_URL}/{people_id}/"
+    data = await get_correlated_data(url=url, data_label="vehicles")
     return data

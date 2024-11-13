@@ -4,10 +4,12 @@ from src.services.starships_service import get_starships, get_starship_by_id
 from .fixtures import mock_starship_data, mock_starships_data
 from src.config import API_BASE_URL
 
+ENDPOINT_API_URL = f"{API_BASE_URL}/starships"
+
 
 @pytest.mark.asyncio
 async def test_get_starships_success(httpx_mock, mock_starships_data):
-    url = f"{API_BASE_URL}starships/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, json=mock_starships_data, status_code=200)
 
     result = await get_starships()
@@ -19,7 +21,7 @@ async def test_get_starships_success(httpx_mock, mock_starships_data):
 
 @pytest.mark.asyncio
 async def test_get_starships_server_error(httpx_mock):
-    url = f"{API_BASE_URL}starships/"
+    url = ENDPOINT_API_URL
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -30,7 +32,7 @@ async def test_get_starships_server_error(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_starship_by_id(httpx_mock, mock_starship_data):
     starship_id = 2
-    url = f"{API_BASE_URL}starships/{starship_id}/"
+    url = f"{ENDPOINT_API_URL}/{starship_id}/"
     httpx_mock.add_response(url=url, json=mock_starship_data, status_code=200)
 
     result = await get_starship_by_id(starship_id)
@@ -41,7 +43,7 @@ async def test_get_starship_by_id(httpx_mock, mock_starship_data):
 @pytest.mark.asyncio
 async def test_get_starship_by_id_not_found(httpx_mock):
     starship_id = 9999
-    url = f"{API_BASE_URL}starships/{starship_id}/"
+    url = f"{ENDPOINT_API_URL}/{starship_id}/"
     httpx_mock.add_response(url=url, status_code=404)
 
     with pytest.raises(HTTPStatusError) as exc_info:
@@ -52,7 +54,7 @@ async def test_get_starship_by_id_not_found(httpx_mock):
 @pytest.mark.asyncio
 async def test_get_starship_by_id_server_error(httpx_mock):
     starship_id = 1
-    url = f"{API_BASE_URL}starships/{starship_id}/"
+    url = f"{ENDPOINT_API_URL}/{starship_id}/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
