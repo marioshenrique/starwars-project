@@ -24,7 +24,7 @@ A arquitetura do projeto foi desenvolvida seguidos os princípios de separação
 
 ![Arquitetura Geral](img/general-architecture.png)
 
-O diagrama acima apresenta a arquitetura geral do projeto. A aplicação é estruturada em uma arquitetura serverless, onde o processamento é feito utilizando o AWS Lambda, e a comunicação realizada pelo API Gateway.
+O diagrama acima ilustra a arquitetura geral do projeto. A aplicação segue uma arquitetura serverless, na qual o processamento é realizado por uma função AWS Lambda, enquanto a comunicação é intermediada pelo Amazon API Gateway.
 
 A arquitetura apresenta os seguintes componentes:
 
@@ -34,11 +34,11 @@ A arquitetura apresenta os seguintes componentes:
 
     - **Aplicações**: sistemas externos que consomem a API.
 
-    Esses clientes fazem requisiçõies HTTP que são enviadas ao API Gateway para processamento.
+    Esses clientes fazem requisições HTTP que são enviadas ao API Gateway para processamento.
 
 - **API Gateway**:
 
-    Atua como ponto de entrada da aplicação, recebendo as requisições. Neste projeto, a API Gateway tem como função principal o roteamento de requisições, direcionando cada requisição para a função Lambda que está executando a aplicação FastAPI.
+    Atua como ponto de entrada da aplicação, recebendo as requisições. Neste projeto, a API Gateway tem como função principal o roteamento de requisições, direcionando cada requisição para a função Lambda correspondente que está executando a aplicação FastAPI.
 
     Após receber uma requisição, o API Gateway a envia para a aplicação FastAPAI no ambiente AWS Lambda.
 
@@ -56,7 +56,7 @@ A arquitetura apresenta os seguintes componentes:
 
 - **Banco de dados PostgreSQL**:
 
-    Utilizado para armazenar dados dos usuários.
+    Utilizado para armazenar dados necessários para autenticação de usuários.
 
 - **API SWAPI**:
 
@@ -97,9 +97,9 @@ A arquitetura apresenta os seguintes componentes:
 
 - **Models**:
 
-    Define a estrutura e a configuração das tabelas no banco de dados, utilizando ORM. Cada modelo representa uma tabela e seus campos, além das relações entre eles.
+    Representam a estrutura das tabelas no banco de dados, utilizando o ORM. Cada modelo corresponde a uma tabela, definindo seus campos como atributos e mapeando as relações entre as tabelas.
 
-    Realiza operações de CRUD diretamente no banco de dados PostgreSQL.
+    Permitem realizar operações CRUD por meio de métodos fornecidos pelo ORM, que traduz as interações de alto nível em comandos SQL executados no banco de dados.
 
 De modo geral, a arquitetura apresenta os seguintes aspectos:
 
@@ -115,7 +115,7 @@ De modo geral, a arquitetura apresenta os seguintes aspectos:
 
 - **Framework web**: FastAPI.
 
-- **Hospedagem em nuvem**: AWS Lambda e AWS API Gateway.
+- **Arquitetura em nuvem**: AWS Lambda e AWS API Gateway.
 
 - **Bando de dados**: PostgreSQL.
 
@@ -125,11 +125,11 @@ De modo geral, a arquitetura apresenta os seguintes aspectos:
 
 - **Autenticação**: JWT (JSON Web Tokens).
 
-- **Documentação automática**: Swagger UI e Redoc.
+- **Documentação automática**: Swagger UI.
 
 ### Justificativas
 
-- **FastAPI**: escolhido para a construção da API devido à sua alta performance e facilidade de criação de endpoints.
+- **FastAPI**: escolhido para a construção da API devido à sua alta performance, suporte nativo a operações assíncronas e facilidade no desenvolvimento de endpoints. Além disso, o framework gera uma documentação automática.
 
 - **AWS Lambda e AWS API Gateway**: serviços serverless da AWS, que permitem escalabilidade automática e gerenciamento eficiente dos endpoints, além de eliminar a necessidade de manutenção de servidores.
 
@@ -141,7 +141,7 @@ De modo geral, a arquitetura apresenta os seguintes aspectos:
 
 - **JWT**: implementado para fornecer autenticação segura, assegurando que apenas usuários autenticados possam interagir com os recursos protegidos.
 
-- **Swagger UI e Redoc**: fornece a documentação automática e interativa dos endpoints. Facilitando a compreensão e o consumo da API, permitindo testes diretos dos endpoints e visualização dos modelos de dados.
+- **Swagger UI**: fornece a documentação automática e interativa dos endpoints. Facilitando a compreensão e o consumo da API, permitindo testes diretos dos endpoints e visualização dos modelos de dados.
 
 ## Endpoints da API
 
@@ -161,6 +161,8 @@ Responsável pela consulta de informações sobre filmes.
 
 - **\[GET\] /films/{film_id}**: retorna informações detalhadas de um filme específico.
 
+- **\[GET\] /films/{film_id}/characters**: retorna informações sobre todos os personagens de um determinado filme, identificado pelo parâmetro {film_id}.
+
 ### Tag: people
 
 Responsável pela consulta de informações sobre personagens.
@@ -168,6 +170,8 @@ Responsável pela consulta de informações sobre personagens.
 - **\[GET\] /people**: retorna uma lista de todos os personagens.
 
 - **\[GET\] /people/{people_id}**: retorna informações detalhadas de um personagem específico.
+
+- **\[GET\] /people/{people_id}/vehicles**: retorna informações sobre todos os veículos associados a um personagem específico, identificado pelo parâmetro {people_id}.
 
 ### Tag: planets
 
@@ -177,13 +181,19 @@ Responsável pela consulta de informações sobre planetas.
 
 - **\[GET\] /planets/{planet_id}**: retorna informações detalhadas de um planeta específico.
 
+- **\[GET\] /planets/{planet_id}/residents**: retorna informações detalhadas sobre todos os personagens que são residentes de um planeta específico, identificado pelo parâmetro {planet_id}.
+
 ### Tag: species
 
 Responsável pela consulta de informações sobre espécies.
 
 - **\[GET\] /species**: retorna uma lista de todos as espécies.
 
-- **\[GET\] /species/{specie_id}**: retorna informações detalhadas de uma espécie específico.
+- **\[GET\] /species/{specie_id}**: retorna informações detalhadas de uma espécie específica.
+
+- **\[GET\] /species/{specie_id}/people**: retorna informações detalhadas sobre todos os personagens que são de uma espécie específica, identificada pelo parâmetro {specie_id}.
+
+- **\[GET\] /species/{specie_id}/films**: retorna informações detalhadas sobre os filmes em que uma espécie específica, identificada pelo parâmetro {specie_id}, está presente.
 
 ### Tag: starships
 
@@ -192,6 +202,8 @@ Responsável pela consulta de informações sobre naves estelares.
 - **\[GET\] /starships**: retorna uma lista de todos as naves estelares.
 
 - **\[GET\] /starships/{starship_id}**: retorna informações detalhadas de um filme específico.
+
+- **\[GET\] /starships/{starship_id}/pilots**: retorna informações detalhadas sobre os pilotos de uma nave estelar específica, identificada pelo parâmetrom {starship_id}.
 
 ### Tag: vehicles
 
@@ -203,7 +215,7 @@ Responsável pela consulta de informações sobre veículos.
 
 ## Autenticação e Autorização
 
-Foi implementado um sistema de autenticação baseado em JWT para proteger os endpoints da API. Apenas usuários autenticados podem acessados os dados da SWAPI através da API deste projeto.
+Foi implementado um sistema de autenticação baseado em JWT para proteger os endpoints da API. Apenas usuários autenticados podem acessar os dados da SWAPI através da API deste projeto.
 
 - **Registro de usuário**: os usuários podem se registrar fornencendo um email e senha. A senha é armazenada no banco de dados como um hash seguro.
 
@@ -216,6 +228,10 @@ De maneira resumida, temos:
  - **Login**: POST /user/login
 
  - **Acesso aos endpoints protegidos**: incluir o JWT no header "Authorization: Bearer \<token\>"
+
+ A imagem abaixo apresenta a estratégia de autenticação adotada no projeto.
+
+![Auth](img/auth.png)
 
 ## Banco de Dados
 
@@ -245,9 +261,9 @@ Para garantir a qualidade do código, foram implementados testes unitários para
 
 ### Estratégias de teste
 
-- Mock da SWAPI: foram criados mocks das respostas da SWAPI para testar os endpoints sem depender da conexão externa. Garantindo que os testes sejam isolados e independentes da disponibilidade da API externa.
+- **Mock da SWAPI**: foram criados mocks das respostas da SWAPI para testar os endpoints sem depender da conexão externa. Garantindo que os testes sejam isolados e independentes da disponibilidade da API externa.
 
-- Banco de dados em memória: foi utilizado um banco de dados SQLite em memória para testar as operações de registro e login sem afetar o banco de dados de produção.
+- **Banco de dados em memória**: foi utilizado um banco de dados SQLite em memória para testar as operações de registro e login sem afetar o banco de dados de produção.
 
 ## Testar a aplicação localmente
 
