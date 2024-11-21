@@ -8,3 +8,4 @@ python
 python.zip
 psycopg2-compatibilidade
 projeto.txt
+**/__pycache__/
