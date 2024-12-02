@@ -1,8 +1,8 @@
 import pytest
 from httpx import HTTPStatusError
-from src.services.films_service import get_film_by_id, get_films
-from .fixtures import mock_films_data, mock_film_data
-from src.config import API_BASE_URL
+from services.films_service import get_film_by_id, get_films
+from fixtures import mock_films_data, mock_film_data
+from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/films"
 

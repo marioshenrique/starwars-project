@@ -1,5 +1,5 @@
 import asyncio
-from ...config import API_BASE_URL
+from config import API_BASE_URL
 import httpx
 from fastapi import HTTPException, status
 

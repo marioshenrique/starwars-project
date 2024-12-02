@@ -1,17 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..schemas.planets_schemas import (
+from schemas.planets_schemas import (
     PlanetListResponse,
     Planet,
     PlanetIDModel,
     ResidentsPlanet,
 )
-from ..services.planets_service import (
+from services.planets_service import (
     get_planets,
     get_planet_by_id,
     get_residents_by_planet,
 )
-from ..schemas.user_schemas import SafeUser
-from ..dependencies.user_dependencies import get_client_user
+from schemas.user_schemas import SafeUser
+from dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/planets", tags=["planets"])
 

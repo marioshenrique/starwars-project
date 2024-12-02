@@ -1,14 +1,14 @@
 import pytest
 from fastapi import HTTPException
-from src.services.user_services import (
+from services.user_services import (
     create_user,
     get_user_by_email,
     register_user,
     login,
 )
-from src.utils.security import verify_password
-from src.models.user_model import User
-from src.schemas.user_schemas import RegisterRequest, LoginRequest
+from utils.security import verify_password
+from models.user_model import User
+from schemas.user_schemas import RegisterRequest, LoginRequest
 
 
 def test_create_user_and_test_get_user_by_email(db_session):

@@ -1,7 +1,7 @@
 import httpx
 
-from ..config import API_BASE_URL
-from .external.swapi_service import get_correlated_data, get_data_list, get_data
+from config import API_BASE_URL
+from services.external.swapi_service import get_correlated_data, get_data_list, get_data
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/films"
 

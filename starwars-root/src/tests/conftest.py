@@ -6,8 +6,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.config import Base
-from src.models.user_model import User
+from config import Base
+from models.user_model import User
 from httpx import AsyncClient
 
 

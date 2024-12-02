@@ -1,19 +1,19 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..schemas.species_schemas import (
+from schemas.species_schemas import (
     SpeciesListResponse,
     Specie,
     SpecieIDModel,
     FilmsSpecie,
     PeopleSpecie,
 )
-from ..services.species_service import (
+from services.species_service import (
     get_species,
     get_specie_by_id,
     get_films_by_specie,
     get_people_by_specie,
 )
-from ..schemas.user_schemas import SafeUser
-from ..dependencies.user_dependencies import get_client_user
+from schemas.user_schemas import SafeUser
+from dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/species", tags=["species"])
 

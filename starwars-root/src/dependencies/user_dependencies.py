@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from .database_dependencies import get_db
+from dependencies.database_dependencies import get_db
 from jose import jwt, JWTError
-from ..config import SECRET_KEY, ALGORITHM
-from ..models.user_model import User
-from ..schemas.user_schemas import SafeUser
+from config import SECRET_KEY, ALGORITHM
+from models.user_model import User
+from schemas.user_schemas import SafeUser
 
 bearer_scheme = HTTPBearer()
 

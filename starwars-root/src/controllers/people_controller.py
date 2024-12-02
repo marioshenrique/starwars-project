@@ -1,17 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
-from ..schemas.people_schemas import (
+from schemas.people_schemas import (
     PeopleListResponse,
     Person,
     PeopleIDModel,
     VehiclesPeople,
 )
-from ..services.people_service import (
+from services.people_service import (
     get_peoples,
     get_people_by_id,
     get_vehicles_by_people,
 )
-from ..schemas.user_schemas import SafeUser
-from ..dependencies.user_dependencies import get_client_user
+from schemas.user_schemas import SafeUser
+from dependencies.user_dependencies import get_client_user
 
 router = APIRouter(prefix="/people", tags=["people"])
 

@@ -1,8 +1,8 @@
 import pytest
 from httpx import HTTPStatusError
-from src.services.species_service import get_species, get_specie_by_id
-from .fixtures import mock_specie_data, mock_species_data
-from src.config import API_BASE_URL
+from services.species_service import get_species, get_specie_by_id
+from fixtures import mock_specie_data, mock_species_data
+from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/species"
 

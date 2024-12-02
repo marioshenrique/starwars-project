@@ -4,14 +4,14 @@ from mangum import Mangum
 import httpx
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import ValidationError
-from .controllers import user_controller
-from .controllers import films_controller
-from .controllers import people_controller
-from .controllers import planets_controller
-from .controllers import species_controller
-from .controllers import starships_controller
-from .controllers import vehicles_controller
-from .exception_handlers import (
+from controllers import user_controller
+from controllers import films_controller
+from controllers import people_controller
+from controllers import planets_controller
+from controllers import species_controller
+from controllers import starships_controller
+from controllers import vehicles_controller
+from exception_handlers import (
     http_exception_handler,
     httpx_http_status_error_handler,
     starlette_http_exception_handler,

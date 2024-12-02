@@ -2,11 +2,11 @@ import jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from ..models.user_model import User
-from ..utils.security import hash_password
-from ..config import SessionLocal, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
-from ..schemas.user_schemas import LoginRequest, RegisterRequest
-from ..utils.security import verify_password
+from models.user_model import User
+from utils.security import hash_password
+from config import SessionLocal, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from schemas.user_schemas import LoginRequest, RegisterRequest
+from utils.security import verify_password
 
 
 def create_access_token(data: dict):
