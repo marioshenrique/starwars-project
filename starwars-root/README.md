@@ -271,6 +271,8 @@ Siga os passados abaixo para configurar e executar a aplicação localmente.
 
 ### Pré-requisitos
 
+- IDE (VSCode, por exemplo)
+
 - Python 3.10 
 
 - Git para clonar o repositório
@@ -303,11 +305,11 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
-- Criar o banco de dados
+- Criar o banco de dados (caso não exista)
 ```
 python -m src.create_db
 ```
-- Configurar as variáveis de ambiente
+- Configurar as variáveis de ambiente em um arquivo .env
 
 ```
 API_BASE_URL - URL da API externa
@@ -332,4 +334,57 @@ uvicorn src.main:app --reload
 ```
 Abra o navegador e acesse: http://localhost:8000/docs
 ```
+## Testar a aplicação com Docker localmente
 
+Siga os passos abaixo para configurar e executar a aplicação localmente utilizando o Docker.
+
+### Pré-requisitos
+
+- Docker instalado na máquina.
+
+- Git para clonar o repositório.
+
+### Configuração
+
+- Clonar o repositório:
+
+Clone o repositório utilizando o comando abaixo:
+
+```
+git clone https://github.com/marioshenrique/starwars-project.git
+cd starwars-root
+```
+
+- Criar o arquivo .env com as seguintes variáveis de ambiente:
+
+```
+API_BASE_URL - URL da API externa.
+DATABASE_URL - Conexão com o banco de dados PostgreSQL.
+SECRET_KEY - Chave secreta utilizada para tokens JWT.
+ALGORITHM - Algoritmo utilizado para o JWT.
+ACCESS_TOKEN_EXPIRE_MINUTES - Tempo de expiração do token JWT em minutos.
+```
+
+- Construir a imagem Docker:
+
+Execute o comando abaixo para criar a imagem Docker:
+
+```
+sudo docker build -t starwars-project-image-ubuntu:v1 .
+```
+
+- Criar e executar o container:
+
+crie e execute o container utilizando o comando:
+
+```
+sudo docker run --name starwars-ubuntu-1 -it -p 8080:80 starwars-project-image-ubuntu:v1
+```
+
+### Testar
+
+Após a aexecução bem-sucedida do container, acesse a aplicação localmente no navegador:
+
+```
+http://localhost:8080/docs
+```
