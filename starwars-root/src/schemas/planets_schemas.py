@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from schemas.people_schemas import Person
 
 
 class Planet(BaseModel):
@@ -28,25 +29,6 @@ class PlanetIDModel(BaseModel):
     planet_id: int = Field(..., ge=1)
 
 
-class Residents(BaseModel):
-    name: Optional[str]
-    height: Optional[str]
-    mass: Optional[str]
-    hair_color: Optional[str]
-    skin_color: Optional[str]
-    eye_color: Optional[str]
-    birth_year: Optional[str]
-    gender: Optional[str]
-    homeworld: Optional[str]
-    films: Optional[List[str]]
-    species: Optional[List[str]]
-    vehicles: Optional[List[str]]
-    starships: Optional[List[str]]
-    created: Optional[str]
-    edited: Optional[str]
-    url: Optional[str]
-
-
 class ResidentsPlanet(BaseModel):
     count: int
-    residents: List[Residents]
+    residents: List[Person]

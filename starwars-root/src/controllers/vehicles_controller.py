@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from schemas.vehicles_schemas import (
     VehiclesListResponse,
-    Vehicles,
-    VehiclesIDModel,
+    Vehicle,
+    VehicleIDModel,
 )
 from services.vehicles_service import get_vehicles, get_vehicle_by_id
 from schemas.user_schemas import SafeUser
@@ -16,8 +16,8 @@ async def list_vehicles(client: SafeUser = Depends(get_client_user)):
     return await get_vehicles()
 
 
-@router.get("/{vehicle_id}", response_model=Vehicles)
+@router.get("/{vehicle_id}", response_model=Vehicle)
 async def get_vehicle(
-    vehicle: VehiclesIDModel = Depends(), client: SafeUser = Depends(get_client_user)
+    vehicle: VehicleIDModel = Depends(), client: SafeUser = Depends(get_client_user)
 ):
     return await get_vehicle_by_id(vehicle.vehicle_id)

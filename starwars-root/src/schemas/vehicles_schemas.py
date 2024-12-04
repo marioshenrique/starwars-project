@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 
-class Vehicles(BaseModel):
+class Vehicle(BaseModel):
     name: Optional[str]
     model: Optional[str]
     manufacturer: Optional[str]
@@ -23,8 +23,8 @@ class Vehicles(BaseModel):
 
 class VehiclesListResponse(BaseModel):
     count: int
-    vehicles: List[Vehicles]
+    vehicles: List[Vehicle]
 
 
-class VehiclesIDModel(BaseModel):
+class VehicleIDModel(BaseModel):
     vehicle_id: int = Field(..., ge=1)
