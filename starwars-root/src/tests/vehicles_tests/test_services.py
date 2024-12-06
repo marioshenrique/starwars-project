@@ -1,7 +1,7 @@
 import pytest
 from httpx import HTTPStatusError
 from services.vehicles_service import get_vehicles, get_vehicle_by_id
-from fixtures import mock_vehicle_data, mock_vehicles_data
+from tests.vehicles_tests.fixtures import mock_vehicle_data, mock_vehicles_data
 from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/vehicles"

@@ -1,7 +1,7 @@
 import pytest
 from httpx import HTTPStatusError
 from services.starships_service import get_starships, get_starship_by_id
-from fixtures import mock_starship_data, mock_starships_data
+from tests.starships_tests.fixtures import mock_starship_data, mock_starships_data
 from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/starships"

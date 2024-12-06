@@ -1,7 +1,7 @@
 import pytest
 from httpx import HTTPStatusError
 from services.people_service import get_peoples, get_people_by_id
-from fixtures import mock_people_data, mock_peoples_data
+from tests.people_tests.fixtures import mock_people_data, mock_peoples_data
 from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/people"

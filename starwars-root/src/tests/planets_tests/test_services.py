@@ -1,7 +1,7 @@
 import pytest
 from httpx import HTTPStatusError
 from services.planets_service import get_planet_by_id, get_planets
-from fixtures import mock_planet_data, mock_planets_data
+from tests.planets_tests.fixtures import mock_planet_data, mock_planets_data
 from config import API_BASE_URL
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/planets"
