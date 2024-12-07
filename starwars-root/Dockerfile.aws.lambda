@@ -4,6 +4,5 @@ WORKDIR /var/task
 ENV PYTHONPATH=/var/task
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY .env .
 COPY src/ .
 CMD ["main.handler"]
