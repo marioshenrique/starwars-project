@@ -4,7 +4,6 @@ from mangum import Mangum
 import httpx
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import ValidationError
-from controllers import user_controller
 from controllers import films_controller
 from controllers import people_controller
 from controllers import planets_controller
@@ -29,7 +28,6 @@ app = FastAPI(
 )
 handler = Mangum(app)
 
-app.include_router(user_controller.router)
 app.include_router(films_controller.router)
 app.include_router(people_controller.router)
 app.include_router(planets_controller.router)

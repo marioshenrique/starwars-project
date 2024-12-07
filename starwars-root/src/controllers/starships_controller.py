@@ -20,12 +20,10 @@ async def list_starships():
 
 
 @router.get("/{starship_id}", response_model=Starship)
-async def get_starship(
-    starship: StarshipIDModel = Depends()):
+async def get_starship(starship: StarshipIDModel = Depends()):
     return await get_starship_by_id(starship.starship_id)
 
 
 @router.get("/{starship_id}/pilots", response_model=PilotsStarship)
-async def get_pilots(
-    starship: StarshipIDModel = Depends()):
+async def get_pilots(starship: StarshipIDModel = Depends()):
     return await get_pilots_by_starship(starship.starship_id)

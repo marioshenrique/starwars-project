@@ -20,12 +20,10 @@ async def list_people():
 
 
 @router.get("/{people_id}", response_model=Person)
-async def get_people(
-    people: PeopleIDModel = Depends()):
+async def get_people(people: PeopleIDModel = Depends()):
     return await get_people_by_id(people.people_id)
 
 
 @router.get("/{people_id}/vehicles", response_model=VehiclesPeople)
-async def get_vehicles(
-    people: PeopleIDModel = Depends()):
+async def get_vehicles(people: PeopleIDModel = Depends()):
     return await get_vehicles_by_people(people.people_id)

@@ -15,7 +15,5 @@ async def list_vehicles():
 
 
 @router.get("/{vehicle_id}", response_model=Vehicle)
-async def get_vehicle(
-    vehicle: VehicleIDModel = Depends()
-):
+async def get_vehicle(vehicle: VehicleIDModel = Depends()):
     return await get_vehicle_by_id(vehicle.vehicle_id)

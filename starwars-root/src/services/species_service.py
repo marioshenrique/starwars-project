@@ -1,5 +1,3 @@
-import httpx
-
 from config import API_BASE_URL
 from services.external.swapi_service import get_correlated_data, get_data_list, get_data
 
