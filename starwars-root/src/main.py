@@ -29,6 +29,27 @@ app = FastAPI(
     version="1.0.0",
     root_path=ROOT_PATH,
 )
+original_openapi = app.openapi
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = original_openapi()
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+    for path, methods in openapi_schema["paths"].items():
+        for method, details in methods.items():
+            details.setdefault("security", []).append({"BearerAuth": []})
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
 handler = Mangum(app)
 
 app.include_router(films_controller.router)
