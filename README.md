@@ -328,7 +328,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES: tempo de expiração do token JWT em minutos.
 ```
 - Inicializar o servidor
 ```
-uvicorn src.main:app --reload
+uvicorn main:app --reload
 ```
 - Acessar o Swagger UI
 ```
