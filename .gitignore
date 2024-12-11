@@ -1,8 +1,8 @@
 venv
 
-starwars-root/.env
-starwars-root/data/users.db
-starwars-root/openapi.json
+StarWarsApp/.env
+StarWarsApp/data/users.db
+StarWarsApp/openapi.json
 lib
 function.zip
 python
