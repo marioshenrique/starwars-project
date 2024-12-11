@@ -22,7 +22,7 @@ A arquitetura do projeto foi desenvolvida seguidos os princípios de separação
 
 ### Arquitetura Geral
 
-![Arquitetura Geral](img/general-architecture.png)
+![Arquitetura Geral](starwars-root/img/general-architecture.png)
 
 O diagrama acima ilustra a arquitetura geral do projeto. A aplicação segue uma arquitetura serverless, na qual o processamento é realizado por uma função AWS Lambda, enquanto a comunicação é intermediada pelo Amazon API Gateway.
 
@@ -65,7 +65,7 @@ A arquitetura apresenta os seguintes componentes:
 
 ### Arquitetura da Aplicação FastAPI
 
-![App Architecture](img/app-architecture.png)
+![App Architecture](starwars-root/img/app-architecture.png)
 
 O diagrama acima ilustra a arquitetura interna da aplicação FastAPI, destacando a estrutura modular e o fluxo de dados entre os diferentes componentes. A aplicação segue um padrão de camadas que facilita a manutenção, escalabilidade e organização do código. Separando a lógica de negócio, controle de rotas, validação de dados e acesso ao banco de dados.
 
@@ -231,7 +231,7 @@ De maneira resumida, temos:
 
  A imagem abaixo apresenta a estratégia de autenticação adotada no projeto.
 
-![Auth](img/auth.png)
+![Auth](starwars-root/img/auth.png)
 
 ## Banco de Dados
 
