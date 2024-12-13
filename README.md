@@ -1,73 +1,271 @@
 # Documentação Técnica do Projeto StarWars
 
-## Introdução
+## **Introdução**
 
-O projeto StarWars é uma API RESTful desenvolvida em Python que utiliza a [SWAPI](https://swapi.dev/) como fonte de dados. O objetivo principal é fornecer uma plataforma que permita aos usuários autenticados consultar informações sobre filmes, personagens, planetas, espécies, naves estelares e veículos da saga Star Wars.
+O projeto StarWars é uma API RESTful desenvolvida em Python que utiliza a [SWAPI](https://swapi.dev/) como fonte de dados. O objetivo principal é fornecer uma API que permita aos usuários autenticados consultar informações sobre filmes, personagens, planetas, espécies, naves estelares e veículos da saga Star Wars.
 
-### Objetivos
+### **Objetivos**
 
 - **Construção da API RESTful**: desenvolver endpoints que permitam usuários consultar informações detalhadas sobre o Universo Star Wars, incluindo filmes, personagens, planetas, espécies, naves estelares e veículos.
 
-- **Integração com a SWAPI**: utilizar a SWAPI como fonte de dados para fornecer as informações sobre Star Wars.
+- **Integração com a SWAPI**: utilizar a API externa SWAPI como fonte de dados para fornecer as informações sobre a saga.
 
-- **Autenticação de usuários**: implementar registro e login de usuários, protegendo os endpoints de dados.
+- **Autenticação de usuários**: implementar uma estratégia de cadastro e login de usuários para acesso aos endpoints, protegidos, da aplicação.
 
 - **Adoção de boas práticas**: seguir padrões de código, estruturação e clareza para facilitar a manutenção e escalabilidade.
 
-- **Implementação de testes unitários**: garantir a qualidade e a confiabilidade da API através de testes automatizados.
+- **Implementação de testes unitários**: garantir a qualidade e a confiabilidade da API através de testes unitários.
 
-## Arquitetura da Solução
+## **Infraestrutura da Solução**
 
-A arquitetura do projeto foi desenvolvida seguidos os princípios de separação de responsabilidades e modularização, utilizando AWS Lambda e API gateway para hospedagem serverless. 
-
-### Arquitetura Geral
-
-![Arquitetura Geral](StarWarsApp/img/general-architecture.png)
-
-O diagrama acima ilustra a arquitetura geral do projeto. A aplicação segue uma arquitetura serverless, na qual o processamento é realizado por uma função AWS Lambda, enquanto a comunicação é intermediada pelo Amazon API Gateway.
-
-A arquitetura apresenta os seguintes componentes:
-
-- **Usuários e aplicações**:
-
-    - **Usuários**: representa os usuários finais que acessam a API por meio de navegadores ou aplicativos móveis.
-
-    - **Aplicações**: sistemas externos que consomem a API.
-
-    Esses clientes fazem requisições HTTP que são enviadas ao API Gateway para processamento.
-
-- **API Gateway**:
-
-    Atua como ponto de entrada da aplicação, recebendo as requisições. Neste projeto, a API Gateway tem como função principal o roteamento de requisições, direcionando cada requisição para a função Lambda correspondente que está executando a aplicação FastAPI.
-
-    Após receber uma requisição, o API Gateway a envia para a aplicação FastAPAI no ambiente AWS Lambda.
-
-- **AWS Lambda**:
-
-    Ambiente serverless responsável pela execução da aplicação FastAPI.
-
-- **Aplicação FastAPI**:
-
-    Representa o núcleo da lógica de negócio do projeto, responsável por processar as requisições e fornecer respostas aos usuários e aplicações. Suas responsabilidades incluem:
-
-    - Interação com o banco de dados PostgreSQL.
-
-    - Integração com a API SWAPI.
-
-- **Banco de dados PostgreSQL**:
-
-    Utilizado para armazenar dados necessários para autenticação de usuários.
-
-- **API SWAPI**:
-
-    A aplicação FastAPI faz requisições para SWAPI para obter informações sobre o universo Star Wars.
+A infraestrutura do projeto foi desenvolvida seguidos os princípios de separação de responsabilidades e modularização, utilizando AWS Lambda para aplicação, AWS API gateway, AWS Cognito, AWS ECR e AWS DynamoDB. 
 
 
-### Arquitetura da Aplicação FastAPI
+A arquitetura do sistema foi projetada utilizando componentes da AWS para garantir escalabilidade, segurança e simplicidade. Abaixo, estão detalhados os componentes principais.
+
+### **Componentes do Sistema**
+
+#### **Aplicação FastAPI**
+ A aplicação principal foi implementada com o framework FastAPI e funciona como um serviço serverless, utilizando o AWS Lambda.
+
+ - **Empacotamento e Implantação**: A aplicação foi empacotada como uma imagem Docker baseada na imagem oficial do AWS Lambda para Python 3.10, garantindo compatibilidade com o ambiente de execução na AWS. A imagem gerada foi armazenada no AWS Elastic Container Registry (ECR), o que facilita o controle de versões e a atualização da aplicação, além de garantir a uniformidade do ambiente em diferentes implantações.
+
+ - **Função Lambda**: O Lambda executa a lógica de negócios da API, incluindo a comunicação com a API externa SWAPI, o processamento dos dados brutos e o envio da resposta processada para os usuários.
+
+ #### **Gateway de API**
+O AWS API Gateway atua como um ponto de entrada para as requisições dos usuários. Ele é responsável por:
+
+- Roteamento das requisições HTTP para a aplicação FastAPI hospedada no AWS Lambda.
+- Autenticação e autorização das requisições utilizando o AWS Cognito.
+
+No AWS API Gateway, as rotas são configuradas para utilizar o autorizador Cognito nos endpoints protegidos. Deslocando a responsabilidade de autenticação e autorização da aplicação para o API Gateway, simplificando a lógica de segurança no backend. O API Gateway integra-se diretamente ao AWS Cognito para validar tokens de acesso emitidos pelo serviço, garantindo que apenas usuários autenticados e autorizados possam acessar os recursos protegidos.
+
+#### **Gerenciamento de Usuários**
+O AWS Cognito é utilizado para gerenciar o fluxo de cadastro, login e autenticação de usuários, integrando-se com funções AWS Lambda para processamento de eventos acionados por triggers do Cognito. Ele fornece:
+
+- **Página de login**: uma interface para que os usuários realizem o cadastro e login.
+
+- **Autenticadores OAuth2 e OpenID Connect (OIDC)**: utilizado para gerar tokens de acesso (JWT) que autenticam as requisições aos endpoints protegidos.
+
+- **Triggers Lambda**: Cognito aciona funções Lambda para personalizar o fluxo de cadastro de usuários e integração com o banco de dados DynamoDB.
+
+#### **Banco de Dados**
+
+O banco de dados AWS DynamoDB é utilizado para armazenar informações sobre os usuários cadastrados. A estrutura do banco de dados é mostrada a seguir:
+
+- **Tabela users**:
+    - **Estrutura**:
+        - **user_id** (chave de partição): identificador único do usuário.
+        - **confirmed**: booleano que indica se o usuário confirmou o email.
+        - **created_at**: data e hora do registro do usuário.
+        - **email**: email do usuário.
+
+Os registros do banco de dados são inseridos/atualizados a partir do uso de função Lambda que interage com os eventos "PreSignUp" e "PostConfirmation" do Cognito, garantindo consistência entre os dados armazenados no Cognito e os dados armazenados no DynamoDB.
+
+#### **Funções Lambda para Manipulação de Eventos do Cognito**
+
+- **CognitoUserSyncHandler**:
+
+    - Manipula os triggers "PreSignUp" e "PostConfirmation" do Cognito.
+
+    - Realiza validações, registro de usuários e atualização de status de usuários no DynamoDB.
+
+A função Lambda CognitoUserSyncHandler também foi empacotada como imagem Docker e armazenada no AWS ECR.
+
+### **Fluxo Geral de Funcionamento do Sistema**
+
+O sdiagrama mostrado abaixo ilustra o funcionamento do sistema quando o usuário possui o token de acesso JWT e realiza requisições para consumir a API.
+
+[INSERIR O DIAGRAMA AQUI]
+
+O funcionamento detalhado do sistema é descrito a seguir.
+
+1. **Início da Requisição**
+
+    O usuário envia uma requisição HTTP para acessar os recursos protegidos da API (representados pelo Lambda StarWarsApp).
+
+    A requisição inclui um token JWT no cabeçalho *Authorization*, que foi previamente obtido apís o login no AWS Cognito.
+
+2. **Processamento pelo AWS API Gateway**
+
+    O API Gateway recebe a requisição e detecta que o recurso solicitado é protegido.
+
+    O API Gateway utiliza um autorizador Cognito configurado para validar o token JWT fornecido.
+
+    Ele verifica:
+
+    - A assinatura do token JWT.
+    - O tempo de expiração (exp).
+    - O emissor (iss) e o público-alvo (aud) para garantir que o token seja válido para o pool de usuários Cognito configurado.
+
+    Caso o token JWT seja válido, o fluxo prossegue; caso contrário, o API Gateway retorna um erro HTTP 401 (Unauthorized) ao usuário.
+
+3. **Encaminhamento à Lambda**
+
+    Após validar o token JWT, o A´PI Gateway encaminha a requisição para a função AWS Lambda (StarWarsApp), que é responsável pelo processamento da lógica do sistema.
+
+    A Lambda:
+
+    - Recebe a requisição e processa os dados enviados pelo usuário.
+
+    - Com base nos parâmetros recebidos, faz requisições HTTP à API SWAPI para recuperar dados brutos.
+
+4. **Comunicação com a API SWAPI**
+
+    A Lambda (StarWarsApp) faz requisições à API SWAPI utilizando os parâmetros fornecidos pelo usuário.
+
+    A SWAPI retorna os dados brutos relacionados à saga Star Wars para a Lambda.
+
+5. **Processamento dos Dados pela Lambda**
+
+    A função Lambda processa os dados brutos retornados pela SWAPI, aplicando lógica de transformação, filtro, etc., necessários para a aplicação.
+
+    Após o processamento, a Lambda gera uma resposta no formato esperado pelo usuário.
+
+6. **Retorno da Resposta ao Usuário**
+
+    A Lambda retorna a resposta processada para o API Gateway.
+
+    O API Gateway encaminha a resposta ao usuário, completando o ciclo da requisição.
+
+
+### **Fluxo de Cadastro**
+
+O diagrama ilustra o processo de cadastro de usuário no AWS Cognito com integração à função Lambda CognitoUserSyncHandler e ao banco de dados DynamoDB, detalhando as etapas de registro inicial e conformação de usuário.
+
+[INSERIR DIAGRAMA AQUI]
+
+O funcionamento do fluxo de cadastro é descrito abaixo:
+
+#### **Registro Inicial**
+
+1. **Acesso ao Cliente Cognito**
+
+    O usuário acessa a interface do cliente Cognito para iniciar o processo de cadastro.
+
+    O cliente Cognito é responsável por exibir a interface onde o usuário preenche os campos orbigatórios, como email e senha.
+
+2. **Envio dos Dados de Cadastro**
+
+    O usuário insere as informações (email e senha) e clica no botão "Sign Up".
+
+    Essas informações são enviadas para o AWS Cognito.
+
+3. **Trigger PreSignUp**
+
+    O Cognito dispara o evento PreSignUp, acionando a função Lambda "CognitoUserSyncHandler".
+
+    A função Lambda executa as seguintes ações:
+
+    - Verifica no banco de dados DynamoDB (tabela 'users') se já existe um registro com o mesmo 'email' ou 'user_id'.
+
+    - Se os dados forem únicos:
+
+        - Registra o novo usuário no DynamoDB com os seguintes atributos:
+
+            - user_id
+            - email
+            - confirmed: False
+            - created_at
+    - Caso os dados já existam, a Lambda retorna um erro, indicando que o email já está registrado. 
+
+#### **Envio de Cógio de Confirmação**
+
+Após a etapa de registro inicial bem-sucedida:
+
+- O Cognito envia automaticamente um email de confirmação para o endereço de email fornecido pelo usuário.
+
+- O email contém um código de confirmação necessário para confirmar a conta.
+
+#### **Confirmação de Cadastro**
+
+1. **Envio do Código de Confirmação**
+
+    O usuário acessa novamente o cliente Cognito e insere o código de confirmação recebido por email.
+
+    O cliente envia o código de confirmação para o Cognito.
+
+2. **Trigger PostConfirmation**
+
+    O Cognito dispara o evento PostConfirmation, acionando novamente a função Lambda CognitoUserSyncHandler.
+
+    A função Lambda executa as seguintes ações:
+
+    - Atualiza o registro do usuário no DynamoDB:
+
+        - Modifica o atributo 'confirmed' de 'False' para 'True', indicando que o usuário confirmou sua conta.
+
+#### **Finalização do Cdastro**
+
+Após confirmação bem-sucedida, o usuário está devidamente cadastrado.
+
+O usuário agora está apto a realizar login e acessar os recursos protegidos do sistema.
+
+
+### **Fluxo de Login**
+
+O diagrama apresentado descreve o processo de login de usuários utilizando o AWS COgnito com o fluxo de concessão implícita do OAuth 2.0. 
+
+[INSERIR O DIAGRAMA AQUI]
+
+#### **Acesso à Interface Cognito UI**
+
+1. O usuário acessa a interface de login fornecida pelo cliente do AWS Cognito.
+
+2. O usuário insere suas credenciais de email e senha.
+
+#### **Autenticação no Cognito**
+
+1. Após envio das credenciais:
+
+    - O Cognito valida o email e senha fornecidos pelo usuário.
+
+    - Essa validação ocorre dentro do pool de usuários configurado no Cognito.
+
+    - Se as credenciais forem inválidas, o Cognito retorna um erro informando que o login não foi autorizado.
+
+2. Se as credenciais forem válidas:
+
+    - O cognito autentica o usuário e gera um token de acesso JWT.
+
+#### **Redirecionamento para a URL de Retorno**
+
+1. Após a autenticação bem-sucedida:
+
+    -   O Cognito redireciona o usuário para a URL de retorno configurada no cliente Cognito.
+
+    - A URL de retorno é um endpoint previamente registrado, como:
+
+    ```
+    https://example.com/callback
+    ```
+
+2. O redirecionamento inclui o token de acesso JWT como um parâmetro no fragmento da URL:
+
+    ```
+    https://example.com/callback#id_token=<TOKEN>&access_token=<TOKEN>&expires_in=3600&token_type=Bearer
+    ```
+
+#### **Uso do Token JWT**
+
+1. O token de acesso JWT é extraído do fragmento da URL pelo cliente (navegador ou aplicação).
+
+2. O token JWT pode ser usado para:
+
+    - Autenticar o usuário em chamadas subsequentes para os endpoints protegidos da aplicação.
+
+    - Ele é enviado no cabeçalho *Authorization* das requisições HTTP no formato:
+
+    ```
+    Authorization: <TOKEN>
+    ```
+
+
+### **Arquitetura da Aplicação FastAPI**
 
 ![App Architecture](StarWarsApp/img/app-architecture.png)
 
-O diagrama acima ilustra a arquitetura interna da aplicação FastAPI, destacando a estrutura modular e o fluxo de dados entre os diferentes componentes. A aplicação segue um padrão de camadas que facilita a manutenção, escalabilidade e organização do código. Separando a lógica de negócio, controle de rotas, validação de dados e acesso ao banco de dados.
+O diagrama acima ilustra a arquitetura interna da aplicação FastAPI, destacando a estrutura modular e o fluxo de dados entre os diferentes componentes. A aplicação segue um padrão de camadas que facilita a manutenção, escalabilidade e organização do código. Separando a lógica de negócio, controle de rotas e validação de dados.
 
 A arquitetura apresenta os seguintes componentes:
 
@@ -95,65 +293,114 @@ A arquitetura apresenta os seguintes componentes:
 
     Contém a lógica de negócio da aplicação. Processa as operações necessárias para atender a uma requisição e centraliza as regras de negócio.
 
-- **Models**:
-
-    Representam a estrutura das tabelas no banco de dados, utilizando o ORM. Cada modelo corresponde a uma tabela, definindo seus campos como atributos e mapeando as relações entre as tabelas.
-
-    Permitem realizar operações CRUD por meio de métodos fornecidos pelo ORM, que traduz as interações de alto nível em comandos SQL executados no banco de dados.
-
 De modo geral, a arquitetura apresenta os seguintes aspectos:
 
 - **Modularidade**: cada camada tem uma responsabilidade específica, facilitando a manutenção e escalabilidade.
 
-- **Separação de responsabilidades**: a lógica de negócios está isolada em Services, enquanto Controllers gerenciam as rotas, Schemas validam os dados e Models manipulam o banco de dados.
+- **Separação de responsabilidades**: a lógica de negócios está isolada em Services, enquanto Controllers gerenciam as rotas e Schemas validam os dados de entrada e saída.
 
 - **Facilidade de expansão**: novas funcionalidades podem ser adicionadas sem grandes alterações na estrutura.
 
-## Tecnologias Utilizadas
+## **Tecnologias Utilizadas**
 
 - **Linguagem de programação**: Python
 
 - **Framework web**: FastAPI.
 
-- **Arquitetura em nuvem**: AWS Lambda e AWS API Gateway.
+- **Infraestrutura**: 
 
-- **Bando de dados**: PostgreSQL.
+    - **AWS Lambda** 
 
-- **ORM**: SQLAlchemy.
+    - **AWS API Gateway**
+    
+    - **AWS Elastic Container Registry (ECR)**
+    
+    - **AWS Cognito**
+    
+    - **AWS DynamoDB**
+
+- **Contêinerização**: Docker.
+
+- **Banco de dados**: AWS DynamoDB.
 
 - **Teste**: Pytest.
 
-- **Autenticação**: JWT (JSON Web Tokens).
+- **Autenticação**: Token JWT (JSON Web Tokens).
 
 - **Documentação automática**: Swagger UI.
 
-### Justificativas
+### **Justificativas**
 
-- **FastAPI**: escolhido para a construção da API devido à sua alta performance, suporte nativo a operações assíncronas e facilidade no desenvolvimento de endpoints. Além disso, o framework gera uma documentação automática.
+- **FastAPI**
 
-- **AWS Lambda e AWS API Gateway**: serviços serverless da AWS, que permitem escalabilidade automática e gerenciamento eficiente dos endpoints, além de eliminar a necessidade de manutenção de servidores.
+    - Permite desenvolvimento rápido de APIs RESTful com alta performance.
 
-- **PostgreSQL**: banco de dados relacional, utilizado para armazenar dados de usuários para autenticação.
+    - Integração nativa com OpenAPI (Swagger) para geração automática de documentação.
 
-- **SQLAlchemy**: adotado no projeto para permitir a interação com o banco de dados, garantindo uma camada de abstração que facilita as operações de CRUD a partir do mapeamento objeto-relacional.
+- **AWS Lambda**
 
-- **Pytest**: framework de testes simples que facilita a escrita e manutenção de testes unitários.
+    - Solução serverless, eliminando a necessidade de gerenciar servidores.
 
-- **JWT**: implementado para fornecer autenticação segura, assegurando que apenas usuários autenticados possam interagir com os recursos protegidos.
+    - Escala automaticamente com base no volume de requisições.
 
-- **Swagger UI**: fornece a documentação automática e interativa dos endpoints. Facilitando a compreensão e o consumo da API, permitindo testes diretos dos endpoints e visualização dos modelos de dados.
+    - Integração direta com outros serviços AWS.
 
-## Endpoints da API
+- **AWS API Gateway**
 
-### Tag: user
+    - Garante gerenciamento simplificado de endpoints, roteamento de requisições e integração com Lambda.
 
-Responsável pela autenticação e registro de novos usuários no sistema.
+    - Oferece suporte nativo à autenticação com AWS Cognito e validação de tokens JWT.
 
- - **\[POST\] /user/register**: registra um novo usuário no sistema.
+- **AWS Elastic Container Registry (ECR)**
 
- - **\[POST\] /user/login**: autentica um usuário existente e retorna um token JWT com tempo de expieração de 30 minutos.
+    - Repositório seguro para armazenamento e gerencimaento de imagens Docker.
 
-### Tag: films
+    - Integração direta com AWS Lambda para execução de funções baseadas em contêineres Docker.
+
+- **AWS Cognito**
+
+    - Fornece uma solução completa para gerenciamento de usuários e autenticação com suporte a OAuth 2.0.
+
+    - Simplifica a implementação de login, registro e recuperação de senhas.
+
+    - Gera tokens JWT para autorização segura em endpoints protegidos.
+
+- **AWS DynamoDB**
+
+    - Banco de dados NoSQL gerenciado, escalável e com alta disponibilidade.
+
+    - Integração nativa com AWS Lambda para armazenamento de dados de usuários.
+
+- **Contêinerização: Docker**
+
+    - Permite empacotamento da aplicação com todas as dependências. garantindo consistência em diferentes ambientes.
+
+    - Simplifica o deploy em AWS Lambda com suporte a imagens Docker.
+
+    - Facilita a escalabilidade e portabilidade entre diferentes plataformas.
+
+
+- **Pytest**
+
+    - Framework de testes altamente utilizado na comunidade Python, com suporte a testes automatizados.
+
+    - Fácil integração com CI/CD pipelines.
+
+- **JWT**
+
+    - Permite autenticação e autorização seguras e independentes de estado.
+
+- **Swagger UI**
+
+    - Geração automática de documentação interativa, facilitando o entendimento e teste dos endpoints.
+
+    - Integrado nativamente com o FastAPI.
+
+    - Permite a validação de requisições diretamente na interface.
+
+## **Endpoints da API**
+
+### **Tag: films**
 
 Responsável pela consulta de informações sobre filmes.
 
@@ -163,7 +410,7 @@ Responsável pela consulta de informações sobre filmes.
 
 - **\[GET\] /films/{film_id}/characters**: retorna informações sobre todos os personagens de um determinado filme, identificado pelo parâmetro {film_id}.
 
-### Tag: people
+### **Tag: people**
 
 Responsável pela consulta de informações sobre personagens.
 
@@ -173,7 +420,7 @@ Responsável pela consulta de informações sobre personagens.
 
 - **\[GET\] /people/{people_id}/vehicles**: retorna informações sobre todos os veículos associados a um personagem específico, identificado pelo parâmetro {people_id}.
 
-### Tag: planets
+### **Tag: planets**
 
 Responsável pela consulta de informações sobre planetas.
 
@@ -183,7 +430,7 @@ Responsável pela consulta de informações sobre planetas.
 
 - **\[GET\] /planets/{planet_id}/residents**: retorna informações detalhadas sobre todos os personagens que são residentes de um planeta específico, identificado pelo parâmetro {planet_id}.
 
-### Tag: species
+### **Tag: species**
 
 Responsável pela consulta de informações sobre espécies.
 
@@ -195,7 +442,7 @@ Responsável pela consulta de informações sobre espécies.
 
 - **\[GET\] /species/{specie_id}/films**: retorna informações detalhadas sobre os filmes em que uma espécie específica, identificada pelo parâmetro {specie_id}, está presente.
 
-### Tag: starships
+### **Tag: starships**
 
 Responsável pela consulta de informações sobre naves estelares.
 
@@ -205,7 +452,7 @@ Responsável pela consulta de informações sobre naves estelares.
 
 - **\[GET\] /starships/{starship_id}/pilots**: retorna informações detalhadas sobre os pilotos de uma nave estelar específica, identificada pelo parâmetrom {starship_id}.
 
-### Tag: vehicles
+### **Tag: vehicles**
 
 Responsável pela consulta de informações sobre veículos.
 
@@ -213,63 +460,19 @@ Responsável pela consulta de informações sobre veículos.
 
 - **\[GET\] /vehicles/{vehicle_id}**: retorna informações detalhadas de um veículo específico.
 
-## Autenticação e Autorização
-
-Foi implementado um sistema de autenticação baseado em JWT para proteger os endpoints da API. Apenas usuários autenticados podem acessar os dados da SWAPI através da API deste projeto.
-
-- **Registro de usuário**: os usuários podem se registrar fornencendo um email e senha. A senha é armazenada no banco de dados como um hash seguro.
-
-- **Login**: ao fazer login, o usuário recebe um token JWT válido por 30 minutos.
-
-De maneira resumida, temos:
-
- - **Registro**: POST /user/register
-
- - **Login**: POST /user/login
-
- - **Acesso aos endpoints protegidos**: incluir o JWT no header "Authorization: Bearer \<token\>"
-
- A imagem abaixo apresenta a estratégia de autenticação adotada no projeto.
-
-![Auth](StarWarsApp/img/auth.png)
-
-## Banco de Dados
-
-### Modelo de dados
-
-- **Tabela Users**:
-    
-    - **id**: UUID (chave primária)
-
-    - **email**: string única (restrição de integridade)
-
-    - **hashed_password**: string
-
-    - **is_active**: booleano
-
-### ORM com SQLAlchemy
-
-As tabelas foram mapeadas para classes Python, facilitando as operações CRUD.
-
-### Hospedagem
-
-O banco de dados foi hospedado no servidor do [ElephantSQL](https://www.elephantsql.com/), que é um serviço na nuvem que oferece instâncias gerenciadas do PostgreSQL. Utilizado por desenvolvedoras para criação de bancos de dados em nuvem para testes de aplicações.
-
-## Testes Unitários
+## **Testes Unitários**
 
 Para garantir a qualidade do código, foram implementados testes unitários para a camada de "services", onde a lógica de negócios é processada. Foi utilizado o Pytest.
 
-### Estratégias de teste
+### **Estratégias de teste**
 
 - **Mock da SWAPI**: foram criados mocks das respostas da SWAPI para testar os endpoints sem depender da conexão externa. Garantindo que os testes sejam isolados e independentes da disponibilidade da API externa.
 
-- **Banco de dados em memória**: foi utilizado um banco de dados SQLite em memória para testar as operações de registro e login sem afetar o banco de dados de produção.
-
-## Testar a aplicação localmente
+## **Testar a aplicação localmente**
 
 Siga os passados abaixo para configurar e executar a aplicação localmente.
 
-### Pré-requisitos
+### **Pré-requisitos**
 
 - IDE (VSCode, por exemplo)
 
@@ -279,7 +482,7 @@ Siga os passados abaixo para configurar e executar a aplicação localmente.
 
 - PostgreSQL (se desejar executar o banco de dados localmente)
 
-### Configuração
+### **Configuração**
 
 - Clonar o repositório
 
@@ -334,17 +537,17 @@ uvicorn main:app --reload
 ```
 Abra o navegador e acesse: http://localhost:8000/docs
 ```
-## Testar a aplicação com Docker localmente
+## **Testar a aplicação com Docker localmente**
 
 Siga os passos abaixo para configurar e executar a aplicação localmente utilizando o Docker.
 
-### Pré-requisitos
+### **Pré-requisitos**
 
 - Docker instalado na máquina.
 
 - Git para clonar o repositório.
 
-### Configuração
+### **Configuração**
 
 - Clonar o repositório:
 
@@ -381,7 +584,7 @@ crie e execute o container utilizando o comando:
 sudo docker run --name starwars-ubuntu-1 -it -p 8080:80 starwars-project-image-ubuntu:v1
 ```
 
-### Testar
+### **Testar**
 
 Após a aexecução bem-sucedida do container, acesse a aplicação localmente no navegador:
 
