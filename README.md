@@ -36,6 +36,7 @@ A arquitetura do sistema foi projetada utilizando componentes da AWS para garant
 O AWS API Gateway atua como um ponto de entrada para as requisições dos usuários. Ele é responsável por:
 
 - Roteamento das requisições HTTP para a aplicação FastAPI hospedada no AWS Lambda.
+
 - Autenticação e autorização das requisições utilizando o AWS Cognito.
 
 No AWS API Gateway, as rotas são configuradas para utilizar o autorizador Cognito nos endpoints protegidos. Deslocando a responsabilidade de autenticação e autorização da aplicação para o API Gateway, simplificando a lógica de segurança no backend. O API Gateway integra-se diretamente ao AWS Cognito para validar tokens de acesso emitidos pelo serviço, garantindo que apenas usuários autenticados e autorizados possam acessar os recursos protegidos.
@@ -54,10 +55,15 @@ O AWS Cognito é utilizado para gerenciar o fluxo de cadastro, login e autentica
 O banco de dados AWS DynamoDB é utilizado para armazenar informações sobre os usuários cadastrados. A estrutura do banco de dados é mostrada a seguir:
 
 - **Tabela users**:
+
     - **Estrutura**:
+
         - **user_id** (chave de partição): identificador único do usuário.
+
         - **confirmed**: booleano que indica se o usuário confirmou o email.
+
         - **created_at**: data e hora do registro do usuário.
+
         - **email**: email do usuário.
 
 Os registros do banco de dados são inseridos/atualizados a partir do uso de função Lambda que interage com os eventos "PreSignUp" e "PostConfirmation" do Cognito, garantindo consistência entre os dados armazenados no Cognito e os dados armazenados no DynamoDB.
@@ -74,9 +80,9 @@ A função Lambda CognitoUserSyncHandler também foi empacotada como imagem Dock
 
 ### **Fluxo Geral de Funcionamento do Sistema**
 
-O sdiagrama mostrado abaixo ilustra o funcionamento do sistema quando o usuário possui o token de acesso JWT e realiza requisições para consumir a API.
+O diagrama mostrado abaixo ilustra o funcionamento do sistema quando o usuário possui o token de acesso JWT e realiza requisições para consumir a API.
 
-[INSERIR O DIAGRAMA AQUI]
+![App Architecture](img/general-architecture.png)
 
 O funcionamento detalhado do sistema é descrito a seguir.
 
@@ -84,7 +90,7 @@ O funcionamento detalhado do sistema é descrito a seguir.
 
     O usuário envia uma requisição HTTP para acessar os recursos protegidos da API (representados pelo Lambda StarWarsApp).
 
-    A requisição inclui um token JWT no cabeçalho *Authorization*, que foi previamente obtido apís o login no AWS Cognito.
+    A requisição inclui um token JWT no cabeçalho *Authorization*, que foi previamente obtido após o login no AWS Cognito.
 
 2. **Processamento pelo AWS API Gateway**
 
@@ -95,14 +101,16 @@ O funcionamento detalhado do sistema é descrito a seguir.
     Ele verifica:
 
     - A assinatura do token JWT.
+
     - O tempo de expiração (exp).
+
     - O emissor (iss) e o público-alvo (aud) para garantir que o token seja válido para o pool de usuários Cognito configurado.
 
     Caso o token JWT seja válido, o fluxo prossegue; caso contrário, o API Gateway retorna um erro HTTP 401 (Unauthorized) ao usuário.
 
 3. **Encaminhamento à Lambda**
 
-    Após validar o token JWT, o A´PI Gateway encaminha a requisição para a função AWS Lambda (StarWarsApp), que é responsável pelo processamento da lógica do sistema.
+    Após validar o token JWT, o API Gateway encaminha a requisição para a função AWS Lambda (StarWarsApp), que é responsável pelo processamento da lógica do sistema.
 
     A Lambda:
 
@@ -131,9 +139,9 @@ O funcionamento detalhado do sistema é descrito a seguir.
 
 ### **Fluxo de Cadastro**
 
-O diagrama ilustra o processo de cadastro de usuário no AWS Cognito com integração à função Lambda CognitoUserSyncHandler e ao banco de dados DynamoDB, detalhando as etapas de registro inicial e conformação de usuário.
+O diagrama ilustra o processo de cadastro de usuário no AWS Cognito com integração à função Lambda CognitoUserSyncHandler e ao banco de dados DynamoDB, detalhando as etapas de registro inicial e confirmação de usuário.
 
-[INSERIR DIAGRAMA AQUI]
+![Register Architecture](img/register-architecture.png)
 
 O funcionamento do fluxo de cadastro é descrito abaixo:
 
@@ -143,7 +151,7 @@ O funcionamento do fluxo de cadastro é descrito abaixo:
 
     O usuário acessa a interface do cliente Cognito para iniciar o processo de cadastro.
 
-    O cliente Cognito é responsável por exibir a interface onde o usuário preenche os campos orbigatórios, como email e senha.
+    O cliente Cognito é responsável por exibir a interface onde o usuário preenche os campos obrigatórios, como email e senha.
 
 2. **Envio dos Dados de Cadastro**
 
@@ -164,12 +172,16 @@ O funcionamento do fluxo de cadastro é descrito abaixo:
         - Registra o novo usuário no DynamoDB com os seguintes atributos:
 
             - user_id
+
             - email
+
             - confirmed: False
+
             - created_at
+
     - Caso os dados já existam, a Lambda retorna um erro, indicando que o email já está registrado. 
 
-#### **Envio de Cógio de Confirmação**
+#### **Envio de Código de Confirmação**
 
 Após a etapa de registro inicial bem-sucedida:
 
@@ -195,7 +207,7 @@ Após a etapa de registro inicial bem-sucedida:
 
         - Modifica o atributo 'confirmed' de 'False' para 'True', indicando que o usuário confirmou sua conta.
 
-#### **Finalização do Cdastro**
+#### **Finalização do Cadastro**
 
 Após confirmação bem-sucedida, o usuário está devidamente cadastrado.
 
@@ -204,9 +216,9 @@ O usuário agora está apto a realizar login e acessar os recursos protegidos do
 
 ### **Fluxo de Login**
 
-O diagrama apresentado descreve o processo de login de usuários utilizando o AWS COgnito com o fluxo de concessão implícita do OAuth 2.0. 
+O diagrama apresentado descreve o processo de login de usuários utilizando o AWS Cognito com o fluxo de concessão implícita do OAuth 2.0. 
 
-[INSERIR O DIAGRAMA AQUI]
+![Register Architecture](img/login-architecture.png)
 
 #### **Acesso à Interface Cognito UI**
 
@@ -263,7 +275,7 @@ O diagrama apresentado descreve o processo de login de usuários utilizando o AW
 
 ### **Arquitetura da Aplicação FastAPI**
 
-![App Architecture](StarWarsApp/img/app-architecture.png)
+![App Architecture](img/app-architecture.png)
 
 O diagrama acima ilustra a arquitetura interna da aplicação FastAPI, destacando a estrutura modular e o fluxo de dados entre os diferentes componentes. A aplicação segue um padrão de camadas que facilita a manutenção, escalabilidade e organização do código. Separando a lógica de negócio, controle de rotas e validação de dados.
 
@@ -373,7 +385,7 @@ De modo geral, a arquitetura apresenta os seguintes aspectos:
 
 - **Contêinerização: Docker**
 
-    - Permite empacotamento da aplicação com todas as dependências. garantindo consistência em diferentes ambientes.
+    - Permite empacotamento da aplicação com todas as dependências, garantindo consistência em diferentes ambientes.
 
     - Simplifica o deploy em AWS Lambda com suporte a imagens Docker.
 
@@ -468,6 +480,43 @@ Para garantir a qualidade do código, foram implementados testes unitários para
 
 - **Mock da SWAPI**: foram criados mocks das respostas da SWAPI para testar os endpoints sem depender da conexão externa. Garantindo que os testes sejam isolados e independentes da disponibilidade da API externa.
 
+## **Testar a aplicação online**
+
+### **Cadastro**
+
+1. Acesse a página de login: [CLIQUE AQUI](https://us-east-1qyffid4gl.auth.us-east-1.amazoncognito.com/login?client_id=7brstltqq30sp6p2iukqk1j4qp&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback)
+
+2. Clique em **Create an account**
+
+3. Forneça o email e senha e clique em **Sign up**
+
+4. Um código de confirmação será enviado para o email cadastrado. Copie o código e confirme a conta.
+
+5. Após isso, sua conta está ativa e você poderá realizar o login no sistema.
+
+### **Login**
+
+1. Acesse a página de Login novamente: [CLIQUE AQUI](https://us-east-1qyffid4gl.auth.us-east-1.amazoncognito.com/login?client_id=7brstltqq30sp6p2iukqk1j4qp&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback)
+
+2. Insira as credenciais de acesso (email e senha).
+
+3. Você será redirecionado para uma URL de retorno. A URL tem o seguinte formato:
+
+    ```
+    https://example.com/callback#id_token=[id_token]access_token=[access_token]&expires_in=3600&token_type=Bearer
+    ```
+    extraia o fragmento "access_token" e armazene-o. Este token será utilizado para acessar os recursos protegidos da aplicação.
+
+### **Testar**
+
+1. Acesse o Swagger UI da aplicação: [Swagger UI](https://ry50mvcs01.execute-api.us-east-1.amazonaws.com/prod/docs)
+
+2. Clique no botão **Authorize** 
+
+3. No campo **value** insira o token de acesso JWT extraído da URL de retorno. 
+
+Após isso, você estará autorizado a acessar os recursos protegidos. O token de acesso será automaticamente passado no header Authorization.
+
 ## **Testar a aplicação localmente**
 
 Siga os passados abaixo para configurar e executar a aplicação localmente.
@@ -479,8 +528,6 @@ Siga os passados abaixo para configurar e executar a aplicação localmente.
 - Python 3.10 
 
 - Git para clonar o repositório
-
-- PostgreSQL (se desejar executar o banco de dados localmente)
 
 ### **Configuração**
 
@@ -508,26 +555,9 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
-- Criar o banco de dados (caso não exista)
-```
-python -m src.create_db
-```
 - Configurar as variáveis de ambiente em um arquivo .env
-
 ```
 API_BASE_URL - URL da API externa
-```
-```
-DATABASE_URL - conexão com o banco de dados PostgreSQL
-```
-```
-SECRET_KEY - chave secreta utilizada para geração e validação dos tokens JWT
-```
-```
-ALGORITHM - algoritmo utilizado pelo JWT
-```
-```
-ACCESS_TOKEN_EXPIRE_MINUTES: tempo de expiração do token JWT em minutos.
 ```
 - Inicializar o servidor
 ```
@@ -562,10 +592,6 @@ cd StarWarsApp
 
 ```
 API_BASE_URL - URL da API externa.
-DATABASE_URL - Conexão com o banco de dados PostgreSQL.
-SECRET_KEY - Chave secreta utilizada para tokens JWT.
-ALGORITHM - Algoritmo utilizado para o JWT.
-ACCESS_TOKEN_EXPIRE_MINUTES - Tempo de expiração do token JWT em minutos.
 ```
 
 - Construir a imagem Docker:

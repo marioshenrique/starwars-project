@@ -19,7 +19,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 async def httpx_http_status_error_handler(request: Request, exc: httpx.HTTPStatusError):
     if exc.response.status_code == 404:
-        detail = "Resource not found"
+        detail = "Resource not found in external API"
     else:
         detail = "Error fetching data from external service"
     return JSONResponse(
