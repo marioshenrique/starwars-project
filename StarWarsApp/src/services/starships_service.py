@@ -5,7 +5,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/starships"
 
 
 async def get_starships():
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     data = {"starships": []}
     next = url
     while next is not None:

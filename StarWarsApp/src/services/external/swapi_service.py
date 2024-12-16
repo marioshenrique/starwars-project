@@ -1,7 +1,5 @@
 import asyncio
-from config import API_BASE_URL
 import httpx
-from fastapi import HTTPException, status
 
 
 async def get_data(url: str):

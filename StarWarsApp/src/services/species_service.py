@@ -5,7 +5,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/species"
 
 
 async def get_species():
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     data = {"species": []}
     next = url
     while next is not None:
@@ -22,12 +22,12 @@ async def get_specie_by_id(specie_id: int):
 
 
 async def get_films_by_specie(specie_id: int):
-    url = f"{ENDPOINT_API_URL}/{specie_id}"
+    url = f"{ENDPOINT_API_URL}/{specie_id}/"
     data = await get_correlated_data(url=url, data_label="films")
     return data
 
 
 async def get_people_by_specie(specie_id: int):
-    url = f"{ENDPOINT_API_URL}/{specie_id}"
+    url = f"{ENDPOINT_API_URL}/{specie_id}/"
     data = await get_correlated_data(url=url, data_label="people")
     return data

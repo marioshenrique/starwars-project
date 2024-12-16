@@ -9,7 +9,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/starships"
 
 @pytest.mark.asyncio
 async def test_get_starships_success(httpx_mock, mock_starships_data):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, json=mock_starships_data, status_code=200)
 
     result = await get_starships()
@@ -21,7 +21,7 @@ async def test_get_starships_success(httpx_mock, mock_starships_data):
 
 @pytest.mark.asyncio
 async def test_get_starships_server_error(httpx_mock):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

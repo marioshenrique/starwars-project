@@ -5,7 +5,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/people"
 
 
 async def get_peoples():
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     data = {"peoples": []}
     next = url
     while next is not None:

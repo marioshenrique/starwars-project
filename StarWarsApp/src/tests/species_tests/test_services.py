@@ -9,7 +9,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/species"
 
 @pytest.mark.asyncio
 async def test_get_species_success(httpx_mock, mock_species_data):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, json=mock_species_data, status_code=200)
 
     result = await get_species()
@@ -21,7 +21,7 @@ async def test_get_species_success(httpx_mock, mock_species_data):
 
 @pytest.mark.asyncio
 async def test_get_species_server_error(httpx_mock):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

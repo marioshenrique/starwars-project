@@ -9,7 +9,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/people"
 
 @pytest.mark.asyncio
 async def test_get_peoples_success(httpx_mock, mock_peoples_data):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, json=mock_peoples_data, status_code=200)
 
     result = await get_peoples()
@@ -21,7 +21,7 @@ async def test_get_peoples_success(httpx_mock, mock_peoples_data):
 
 @pytest.mark.asyncio
 async def test_get_peoples_server_error(httpx_mock):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:

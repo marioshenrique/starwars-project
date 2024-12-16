@@ -9,7 +9,7 @@ ENDPOINT_API_URL = f"{API_BASE_URL}/vehicles"
 
 @pytest.mark.asyncio
 async def test_get_vehicles_success(httpx_mock, mock_vehicles_data):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, json=mock_vehicles_data, status_code=200)
 
     result = await get_vehicles()
@@ -21,7 +21,7 @@ async def test_get_vehicles_success(httpx_mock, mock_vehicles_data):
 
 @pytest.mark.asyncio
 async def test_get_vehicles_server_error(httpx_mock):
-    url = ENDPOINT_API_URL
+    url = ENDPOINT_API_URL + "/"
     httpx_mock.add_response(url=url, status_code=500)
 
     with pytest.raises(HTTPStatusError) as exc_info:
