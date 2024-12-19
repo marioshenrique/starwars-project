@@ -16,7 +16,6 @@ from exception_handlers import (
     httpx_http_status_error_handler,
     starlette_http_exception_handler,
     httpx_request_error_handler,
-    validation_exception_handler,
     response_validation_exception_handler,
     request_validation_exception_handler,
 )
@@ -61,7 +60,6 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(httpx.HTTPStatusError, httpx_http_status_error_handler)
 app.add_exception_handler(StarletteHTTPException, starlette_http_exception_handler)
 app.add_exception_handler(httpx.RequestError, httpx_request_error_handler)
-app.add_exception_handler(ValidationError, validation_exception_handler)
 app.add_exception_handler(
     ResponseValidationError, response_validation_exception_handler
 )

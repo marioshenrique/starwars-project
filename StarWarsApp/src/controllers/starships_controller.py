@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends
 from schemas.starships_schemas import (
     StarshipsListResponse,
     Starship,
