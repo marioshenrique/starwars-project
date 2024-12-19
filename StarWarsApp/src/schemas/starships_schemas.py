@@ -1,38 +1,50 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 from schemas.people_schemas import Person
 
 
 class Starship(BaseModel):
-    name: Optional[str]
-    model: Optional[str]
-    manufacturer: Optional[str]
-    cost_in_credits: Optional[str]
-    length: Optional[str]
-    max_atmosphering_speed: Optional[str]
-    crew: Optional[str]
-    passengers: Optional[str]
-    cargo_capacity: Optional[str]
-    consumables: Optional[str]
-    hyperdrive_rating: Optional[str]
-    MGLT: Optional[str]
-    starship_class: Optional[str]
-    pilots: Optional[List[str]]
-    films: Optional[List[str]]
-    created: Optional[str]
-    edited: Optional[str]
-    url: Optional[str]
+    name: str
+    model: str
+    manufacturer: str
+    cost_in_credits: str
+    length: str
+    max_atmosphering_speed: str
+    crew: str
+    passengers: str
+    cargo_capacity: str
+    consumables: str
+    hyperdrive_rating: str
+    MGLT: str
+    starship_class: str
+    pilots: List[str]
+    films: List[str]
+    created: str
+    edited: str
+    url: str
+
+    class Config:
+        extra = "forbid"
 
 
 class StarshipsListResponse(BaseModel):
     count: int
     starships: List[Starship]
 
+    class Config:
+        extra = "forbid"
+
 
 class StarshipIDModel(BaseModel):
     starship_id: int = Field(..., ge=1)
+
+    class Config:
+        extra = "forbid"
 
 
 class PilotsStarship(BaseModel):
     count: int
     pilots: List[Person]
+
+    class Config:
+        extra = "forbid"

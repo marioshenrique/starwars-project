@@ -5,37 +5,52 @@ from schemas.people_schemas import Person
 
 
 class Specie(BaseModel):
-    name: Optional[str]
-    classification: Optional[str]
-    designation: Optional[str]
-    average_height: Optional[str]
-    skin_colors: Optional[str]
-    hair_colors: Optional[str]
-    eye_colors: Optional[str]
-    average_lifespan: Optional[str]
+    name: str
+    classification: str
+    designation: str
+    average_height: str
+    skin_colors: str
+    hair_colors: str
+    eye_colors: str
+    average_lifespan: str
     homeworld: Optional[str]
-    language: Optional[str]
-    people: Optional[List[str]]
-    films: Optional[List[str]]
-    created: Optional[str]
-    edited: Optional[str]
-    url: Optional[str]
+    language: str
+    people: List[str]
+    films: List[str]
+    created: str
+    edited: str
+    url: str
+
+    class Config:
+        extra = "forbid"
 
 
 class SpeciesListResponse(BaseModel):
     count: int
     species: List[Specie]
 
+    class Config:
+        extra = "forbid"
+
 
 class SpecieIDModel(BaseModel):
     specie_id: int = Field(..., ge=1)
+
+    class Config:
+        extra = "forbid"
 
 
 class FilmsSpecie(BaseModel):
     count: int
     films: List[Film]
 
+    class Config:
+        extra = "forbid"
+
 
 class PeopleSpecie(BaseModel):
     count: int
     people: List[Person]
+
+    class Config:
+        extra = "forbid"
