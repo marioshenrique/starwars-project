@@ -9,6 +9,7 @@ from config import setup_logging
 
 logger = setup_logging()
 
+
 class ErrorResponse(BaseModel):
     detail: str
 
@@ -57,7 +58,6 @@ async def httpx_request_error_handler(request: Request, exc: httpx.RequestError)
     )
 
 
-
 async def response_validation_exception_handler(
     request: Request, exc: ResponseValidationError
 ):
@@ -76,5 +76,8 @@ async def request_validation_exception_handler(
 ):
     logger.error(f"Validation error in request: {exc.errors()}")
     return JSONResponse(
-        status_code=400, content=ErrorResponse(detail="An error occurred while validating the request data.").dict()
+        status_code=400,
+        content=ErrorResponse(
+            detail="An error occurred while validating the request data."
+        ).dict(),
     )

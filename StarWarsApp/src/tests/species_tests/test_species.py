@@ -3,12 +3,14 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_get_species_success():
     response = client.get(f"/species")
     data = response.json()
     assert response.status_code == 200
     assert data["count"] == 37
     assert len(data["species"]) == 37
+
 
 def test_get_species_by_id_success():
     specie_id = 1
@@ -27,10 +29,12 @@ def test_get_species_by_id_success():
     assert len(data["people"]) == 35
     assert len(data["films"]) == 7
 
+
 def test_get_species_by_id_not_found():
     specie_id = 999
     response = client.get(f"/species/{specie_id}")
     assert response.status_code == 404
+
 
 def test_get_people_by_specie_success():
     specie_id = 1
@@ -40,10 +44,12 @@ def test_get_people_by_specie_success():
     assert data["count"] == 35
     assert len(data["people"]) == 35
 
+
 def test_get_people_by_specie_not_found():
     specie_id = 999
     response = client.get(f"/species/{specie_id}/people")
     assert response.status_code == 404
+
 
 def test_get_films_by_specie_success():
     specie_id = 1
@@ -52,6 +58,7 @@ def test_get_films_by_specie_success():
     assert response.status_code == 200
     assert data["count"] == 7
     assert len(data["films"]) == 7
+
 
 def test_get_films_by_specie_not_found():
     specie_id = 999

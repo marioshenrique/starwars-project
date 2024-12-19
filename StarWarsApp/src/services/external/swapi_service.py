@@ -19,10 +19,16 @@ async def get_data_list(url: str, input_model: BaseModel):
         data = response.json()
         validated_data = input_model.parse_obj(data)
         validated_data_dict = validated_data.dict()
-        return validated_data_dict["next"], validated_data_dict["count"], validated_data_dict["results"]
+        return (
+            validated_data_dict["next"],
+            validated_data_dict["count"],
+            validated_data_dict["results"],
+        )
 
 
-async def get_correlated_data(url: str, data_label: str, main_model: BaseModel, related_model: BaseModel):
+async def get_correlated_data(
+    url: str, data_label: str, main_model: BaseModel, related_model: BaseModel
+):
     data = {}
     object_data = await get_data(url, main_model)
     data["count"] = int(len(object_data[data_label]))

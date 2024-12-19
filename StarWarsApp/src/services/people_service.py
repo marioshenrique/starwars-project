@@ -1,6 +1,10 @@
 from config import API_BASE_URL
 from services.external.swapi_service import get_correlated_data, get_data_list, get_data
-from schemas.swapi_schemas import PersonExternalSchema, PeopleExternalSchema, VehicleExternalSchema
+from schemas.swapi_schemas import (
+    PersonExternalSchema,
+    PeopleExternalSchema,
+    VehicleExternalSchema,
+)
 
 ENDPOINT_API_URL = f"{API_BASE_URL}/people"
 
@@ -24,5 +28,10 @@ async def get_people_by_id(people_id: int):
 
 async def get_vehicles_by_people(people_id: int):
     url = f"{ENDPOINT_API_URL}/{people_id}/"
-    data = await get_correlated_data(url=url, data_label="vehicles", main_model=PersonExternalSchema, related_model=VehicleExternalSchema)
+    data = await get_correlated_data(
+        url=url,
+        data_label="vehicles",
+        main_model=PersonExternalSchema,
+        related_model=VehicleExternalSchema,
+    )
     return data

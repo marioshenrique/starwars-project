@@ -10,6 +10,7 @@ class MainExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class FilmExternalSchema(BaseModel):
     title: str
     episode_id: int
@@ -29,11 +30,13 @@ class FilmExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class FilmsExternalSchema(MainExternalSchema):
     results: List[FilmExternalSchema]
 
     class Config:
         extra = "forbid"
+
 
 class PersonExternalSchema(BaseModel):
     name: str
@@ -56,11 +59,13 @@ class PersonExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class PeopleExternalSchema(MainExternalSchema):
     results: List[PersonExternalSchema]
 
     class Config:
         extra = "forbid"
+
 
 class PlanetExternalSchema(BaseModel):
     name: str
@@ -81,11 +86,13 @@ class PlanetExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class PlanetsExternalSchema(MainExternalSchema):
     results: List[PlanetExternalSchema]
 
     class Config:
         extra = "forbid"
+
 
 class SpecieExternalSchema(BaseModel):
     name: str
@@ -107,11 +114,13 @@ class SpecieExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class SpeciesExternalSchema(MainExternalSchema):
     results: List[SpecieExternalSchema]
 
     class Config:
         extra = "forbid"
+
 
 class StarshipExternalSchema(BaseModel):
     name: str
@@ -136,11 +145,13 @@ class StarshipExternalSchema(BaseModel):
     class Config:
         extra = "forbid"
 
+
 class StarshipsExternalSchema(MainExternalSchema):
     results: List[StarshipExternalSchema]
 
     class Config:
         extra = "forbid"
+
 
 class VehicleExternalSchema(BaseModel):
     name: str
@@ -162,6 +173,7 @@ class VehicleExternalSchema(BaseModel):
 
     class Config:
         extra = "forbid"
+
 
 class VehiclesExternalSchema(MainExternalSchema):
     results: List[VehicleExternalSchema]
