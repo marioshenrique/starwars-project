@@ -4,6 +4,7 @@ from schemas.people_schemas import Person
 
 
 class Planet(BaseModel):
+    planet_id: str
     name: str
     rotation_period: str
     orbital_period: str
@@ -13,11 +14,10 @@ class Planet(BaseModel):
     terrain: str
     surface_water: str
     population: str
-    residents: List[str]
-    films: List[str]
+    residents_ids: List[str]
+    films_ids: List[str]
     created: str
     edited: str
-    url: str
 
     class Config:
         extra = "forbid"
@@ -39,6 +39,7 @@ class PlanetIDModel(BaseModel):
 
 
 class ResidentsPlanet(BaseModel):
+    planet_id: str
     count: int
     residents: List[Person]
 

@@ -3,6 +3,7 @@ from typing import List
 
 
 class Vehicle(BaseModel):
+    vehicle_id: str
     name: str
     model: str
     manufacturer: str
@@ -14,11 +15,10 @@ class Vehicle(BaseModel):
     cargo_capacity: str
     consumables: str
     vehicle_class: str
-    pilots: List[str]
-    films: List[str]
+    pilots_ids: List[str]
+    films_ids: List[str]
     created: str
     edited: str
-    url: str
 
     class Config:
         extra = "forbid"

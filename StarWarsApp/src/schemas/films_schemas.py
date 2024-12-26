@@ -4,20 +4,20 @@ from schemas.people_schemas import Person
 
 
 class Film(BaseModel):
+    film_id: str
     title: str
     episode_id: int
     opening_crawl: str
     director: str
     producer: str
     release_date: str
-    characters: List[str]
-    planets: List[str]
-    starships: List[str]
-    vehicles: List[str]
-    species: List[str]
     created: str
     edited: str
-    url: str
+    characters_ids: List[str]
+    planets_ids: List[str]
+    starships_ids: List[str]
+    vehicles_ids: List[str]
+    species_ids: List[str]
 
     class Config:
         extra = "forbid"
@@ -39,6 +39,7 @@ class FilmIDModel(BaseModel):
 
 
 class CharactersFilm(BaseModel):
+    film_id: str
     count: int
     characters: List[Person]
 

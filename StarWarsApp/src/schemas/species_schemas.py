@@ -5,6 +5,7 @@ from schemas.people_schemas import Person
 
 
 class Specie(BaseModel):
+    specie_id: str
     name: str
     classification: str
     designation: str
@@ -13,13 +14,12 @@ class Specie(BaseModel):
     hair_colors: str
     eye_colors: str
     average_lifespan: str
-    homeworld: Optional[str]
+    home_planet_id: Optional[str]
     language: str
-    people: List[str]
-    films: List[str]
+    people_ids: List[str]
+    films_ids: List[str]
     created: str
     edited: str
-    url: str
 
     class Config:
         extra = "forbid"
@@ -41,6 +41,7 @@ class SpecieIDModel(BaseModel):
 
 
 class FilmsSpecie(BaseModel):
+    specie_id: str
     count: int
     films: List[Film]
 
@@ -49,6 +50,7 @@ class FilmsSpecie(BaseModel):
 
 
 class PeopleSpecie(BaseModel):
+    specie_id: str
     count: int
     people: List[Person]
 

@@ -4,6 +4,7 @@ from schemas.vehicles_schemas import Vehicle
 
 
 class Person(BaseModel):
+    person_id: str
     name: str
     height: str
     mass: str
@@ -12,14 +13,13 @@ class Person(BaseModel):
     eye_color: str
     birth_year: str
     gender: str
-    homeworld: str
-    films: List[str]
-    species: List[str]
-    vehicles: List[str]
-    starships: List[str]
+    home_planet_id: str
+    films_ids: List[str]
+    species_ids: List[str]
+    vehicles_ids: List[str]
+    starships_ids: List[str]
     created: str
     edited: str
-    url: str
 
     class Config:
         extra = "forbid"
@@ -27,7 +27,7 @@ class Person(BaseModel):
 
 class PeopleListResponse(BaseModel):
     count: int
-    peoples: List[Person]
+    people: List[Person]
 
     class Config:
         extra = "forbid"
@@ -41,6 +41,7 @@ class PeopleIDModel(BaseModel):
 
 
 class VehiclesPeople(BaseModel):
+    people_id: str
     count: int
     vehicles: List[Vehicle]
 

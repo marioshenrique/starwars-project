@@ -4,6 +4,7 @@ from schemas.people_schemas import Person
 
 
 class Starship(BaseModel):
+    starship_id: str
     name: str
     model: str
     manufacturer: str
@@ -17,11 +18,10 @@ class Starship(BaseModel):
     hyperdrive_rating: str
     MGLT: str
     starship_class: str
-    pilots: List[str]
-    films: List[str]
+    pilots_ids: List[str]
+    films_ids: List[str]
     created: str
     edited: str
-    url: str
 
     class Config:
         extra = "forbid"
@@ -43,6 +43,7 @@ class StarshipIDModel(BaseModel):
 
 
 class PilotsStarship(BaseModel):
+    starship_id: str
     count: int
     pilots: List[Person]
 
