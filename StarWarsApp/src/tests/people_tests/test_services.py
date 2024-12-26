@@ -14,9 +14,9 @@ async def test_get_peoples_success(httpx_mock, mock_peoples_data):
 
     result = await get_peoples()
     assert result["count"] == 2
-    assert len(result["peoples"]) == 2
-    assert result["peoples"][0]["name"] == "Luke Skywalker"
-    assert result["peoples"][1]["name"] == "C-3PO"
+    assert len(result["people"]) == 2
+    assert result["people"][0]["name"] == "Luke Skywalker"
+    assert result["people"][1]["name"] == "C-3PO"
 
 
 @pytest.mark.asyncio
