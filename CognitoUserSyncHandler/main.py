@@ -13,12 +13,14 @@ table = dynamodb.Table("users")
 def register_user(user_id: str, email: str):
     try:
         response = table.scan(
-            FilterExpression = "email = :email",
-            ExpressionAttributeValues = {":email": email}
+            FilterExpression="email = :email",
+            ExpressionAttributeValues={":email": email},
         )
         logger.info(f"Response: {response}")
         if response.get("Items"):
-            logger.warning(f"Email {email} is already registered. Registration ignored.")
+            logger.warning(
+                f"Email {email} is already registered. Registration ignored."
+            )
             raise Exception("Email already exists.")
         table.put_item(
             Item={
@@ -36,12 +38,13 @@ def register_user(user_id: str, email: str):
         logger.error(f"Error registering user {user_id}: {e}")
         raise Exception("Failed to register user.")
 
+
 def confirm_user(user_id):
     try:
         table.update_item(
             Key={"user_id": user_id},
-            UpdateExpression = "set confirmed = :c",
-            ExpressionAttributeValues = {":c": True}
+            UpdateExpression="set confirmed = :c",
+            ExpressionAttributeValues={":c": True},
         )
         logger.info(f"User {user_id} confirmed successfully!")
         return {"message": "User confirmed successfully."}
