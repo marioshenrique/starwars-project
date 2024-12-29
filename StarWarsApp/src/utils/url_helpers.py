@@ -26,7 +26,9 @@ async def get_ids_from_urls(type_object: str, data_object: dict):
         COLUMNS_BY_TYPE[type_object][i] + "_ids": objects_ids_list[i]
         for i in range(len(COLUMNS_BY_TYPE[type_object]))
     }
-    data_dict[type_object+"_id"] = await get_element_from_url(url=data_object["url"], position=-1)
+    data_dict[type_object + "_id"] = await get_element_from_url(
+        url=data_object["url"], position=-1
+    )
     if type_object == "person" or type_object == "specie":
         data_dict["home_planet_id"] = await get_element_from_url(
             url=data_object["homeworld"], position=-1
