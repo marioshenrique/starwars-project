@@ -1,0 +1,46 @@
+name: StarWarsApp Pipeline
+
+on:
+  push:
+    paths:
+      - "StarWarsApp/**"
+
+jobs:
+  build-and-deploy:
+    name: Build, Test, and Deploy StarWarsApp
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        run: | 
+         aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_STARWARSAPP_ECR_URI }}
+
+      - name: Build Docker Image
+        run: |
+         sudo docker build -t ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} -f StarWarsApp/Dockerfile.aws.lambda .
+        
+      - name: List Docker Images
+        run: docker images
+
+      - name: Run Tests
+        run: |
+          docker run --rm ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} pytest StarWarsApp/tests
+
+      - name: Tag Docker Image
+        run: |
+          docker tag ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+      
+      - name: Push Docker Image to ECR
+        run: | 
+          docker push ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+
