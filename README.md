@@ -1,5 +1,26 @@
 # Documentação Técnica do Projeto StarWars
 
+## **Sumário**
+
+- [**Introdução**](#introdução)
+
+- [**Infraestrutura da Solução**](#infraestrutura-da-solução)
+    
+- [**Tecnologias Utilizadas**](#tecnologias-utilizadas)
+    
+- [**Endpoints da API**](#endpoints-da-api)
+    
+- [**Pipeline CI/CD - StarWarsApp**](#pipeline-cicd---starwarsapp)
+    
+- [**Testes Unitários**](#testes-unitários)
+    
+- [**Testar a Aplicação Online**](#testar-a-aplicação-online)
+    
+- [**Testar a Aplicação Localmente**](#testar-a-aplicação-localmente)
+    
+- [**Testar a Aplicação com Docker Localmente**](#testar-a-aplicação-com-docker-localmente)
+    
+
 ## **Introdução**
 
 O projeto StarWars é uma API RESTful desenvolvida em Python que utiliza a [SWAPI](https://swapi.dev/) como fonte de dados. O objetivo principal é fornecer uma API que permita aos usuários autenticados consultar informações sobre filmes, personagens, planetas, espécies, naves estelares e veículos da saga Star Wars.
@@ -472,6 +493,142 @@ Responsável pela consulta de informações sobre veículos.
 
 - **\[GET\] /vehicles/{vehicle_id}**: retorna informações detalhadas de um veículo específico.
 
+## **Pipeline CI/CD - StarWarsApp**
+
+Esta seção descreve as etapas do pipeline de CI/CD configurado para o projeto StarWarsApp, utilizando GitHub Actions. O pipeline automatiza as tarefas de build, teste, publicação da imagem Docker no Amazon ECR e atualização da função Lambda correspondente na AWS, para utilizar a imagem Docker criada.
+
+O pipeline é acionado em **push** para alterações na pasta **StarWarsApp/**. Ele realiza as seguintes etapas:
+
+- Checkout do código.
+
+- Configuração de credenciais AWS.
+
+- Login no Amazon ECR.
+
+- Construção e validação da imagem Docker.
+
+- Execução dos testes unitários.
+
+- Publicação da imagem Docker no Amazon ECR.
+
+- Atualização da função Lambda na AWS.
+
+### **Etapas do Pipeline**
+
+#### **Checkout do Código**
+
+ - Responsável por clonar o repositório contendo o código-fonte do projeto na máquina onde o pipeline está sendo executado. Disponibilizando o código-fonte mais recente para as demais etapas.
+
+  ```  
+  - name: Checkout Code
+    uses: actions/checkout@v3
+  ```
+
+#### **Configuração de Credenciais AWS**
+
+- Configura as credenciais necessárias para interagir com os serviços da AWS. Autenticando e autorizando o acesso aos serviços da AWS.
+
+- Variáveis utilizadas:
+
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_REGION
+
+```
+- name: Configure AWS Credentials
+  uses: aws-actions/configure-aws-credentials@v3
+  with: 
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-region: ${{ secrets.AWS_REGION }}
+```
+
+#### **Login no Amazon ECR**
+
+- Realiza o login no Amazon ECR para que a imagem Docker possa ser publicada.
+
+```
+- name: Log in to Amazon ECR
+  run: | 
+    aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_STARWARSAPP_ECR_URI }}
+```
+
+#### **Build da Imagem Docker**
+
+- Constrói a imagem Docker utilizando o arquivo 'Dockerfile.aws.lambda'.
+
+- Parâmetros:
+
+    - Nome: ``` ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }} ```
+    - tag: ``` ${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} ```
+
+```
+- name: Build Docker Image
+  run: |
+    sudo docker build -t ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} -f StarWarsApp/Dockerfile.aws.lambda StarWarsApp/
+```
+
+#### **Execução de Testes**
+
+- Executa os testes automatizados utilizando ``` pytest ```.
+- Utiliza a seguinte variável de ambiente:
+
+    - ```API_BASE_URL```: URL base da API.
+
+```
+- name: Run Tests
+  run: |
+    docker run --rm --entrypoint pytest -e API_BASE_URL=${{ secrets.AWS_STARWARSAPP_API_BASE_URL }} ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
+```
+
+#### **Tag da Imagem Docker**
+
+- Adiciona uma tag à imagem Docker antes de publicá-la no Amazon ECR.
+
+```
+- name: Tag Docker Image
+  run: |
+    docker tag ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+```
+
+#### **Push da Imagem para o Amazon ECR**
+
+- Publica a imagem Docker no ECR.
+
+```
+- name: Tag Docker Image
+  run: |
+    docker tag ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+```
+
+#### **Atualização da Função Lambda**
+
+- Atualiza a função Lambda para utilizar a nova imagem Docker publicada no ECR.
+
+```
+- name: Update Lambda Function
+  run: | 
+    aws lambda update-function-code --function-name ${{ secrets.AWS_STARWARSAPP_LAMBDA_FUNCTION_NAME }} --image-uri ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+```
+
+### Parâmetros Definidos como Secrets no GitHub Actions
+
+- ``` AWS_SECRET_ACCESS_KEY ```: Chave de acesso AWS.
+
+- ``` AWS_SECRET_ACCESS_KEY ```: Chave secreta AWS.
+
+- ``` AWS_REGION ```: Região dos serviços AWS.
+
+- ``` AWS_STARWARSAPP_ECR_URI ```: URI do repositório no Amazon ECR.
+
+- ``` AWS_STARWARSAPP_IMAGE_NAME ```: 	Nome da imagem Docker.
+
+- ``` AWS_STARWARSAPP_IMAGE_TAG ```: Tag da imagem Docker.
+
+- ``` AWS_STARWARSAPP_LAMBDA_FUNCTION_NAME```: Nome da função Lambda.
+
+- ``` AWS_STARWARSAPP_API_BASE_URL ```: URL base da API para execução de testes.
+
 ## **Testes Unitários**
 
 Para garantir a qualidade do código, foram implementados testes unitários para a camada de "services", onde a lógica de negócios é processada. Foi utilizado o Pytest.
@@ -480,7 +637,7 @@ Para garantir a qualidade do código, foram implementados testes unitários para
 
 - **Mock da SWAPI**: foram criados mocks das respostas da SWAPI para testar os endpoints sem depender da conexão externa. Garantindo que os testes sejam isolados e independentes da disponibilidade da API externa.
 
-## **Testar a aplicação online**
+## **Testar a Aplicação Online**
 
 ### **Cadastro**
 
@@ -517,7 +674,7 @@ Para garantir a qualidade do código, foram implementados testes unitários para
 
 Após isso, você estará autorizado a acessar os recursos protegidos. O token de acesso será automaticamente passado no header Authorization.
 
-## **Testar a aplicação localmente**
+## **Testar a Aplicação Localmente**
 
 Siga os passados abaixo para configurar e executar a aplicação localmente.
 
