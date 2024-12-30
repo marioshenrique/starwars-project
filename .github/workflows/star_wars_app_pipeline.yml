@@ -30,11 +30,12 @@ jobs:
          sudo docker build -t ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} -f StarWarsApp/Dockerfile.aws.lambda StarWarsApp/
         
       - name: List Docker Images
-        run: docker images
+        run: |
+          docker images
 
       - name: Run Tests
         run: |
-          docker run --rm ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} pytest StarWarsApp/tests
+          docker run --rm ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} pytest StarWarsApp/src/tests
 
       - name: Tag Docker Image
         run: |
