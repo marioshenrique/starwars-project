@@ -51,4 +51,4 @@ jobs:
 
       - name: Update Lambda Function
         run: | 
-          aws lambda update-function-code --function-name ${{ AWS_STARWARSAPP_LAMBDA_FUNCTION_NAME }} --image-uri ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
+          aws lambda update-function-code --function-name ${{ secrets.AWS_STARWARSAPP_LAMBDA_FUNCTION_NAME }} --image-uri ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
