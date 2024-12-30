@@ -38,10 +38,8 @@ jobs:
           docker run --rm --entrypoint ls ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
 
       - name: Run Tests
-        env: 
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: |
-          docker run --rm --entrypoint pytest ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
+          docker run --rm --entrypoint pytest -e API_BASE_URL=${{ secrets.API_BASE_URL }} ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
 
       - name: Tag Docker Image
         run: |
