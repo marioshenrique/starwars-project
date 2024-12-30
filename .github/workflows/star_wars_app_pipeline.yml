@@ -32,6 +32,10 @@ jobs:
       - name: List Docker Images
         run: |
           docker images
+      
+      - name: Validate Tests Directory
+        run: |
+          docker run --rm --entrypoint ls ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
 
       - name: Run Tests
         run: |
