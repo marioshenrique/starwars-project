@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker run --rm --entrypoint pytest -e API_BASE_URL=${{ secrets.API_BASE_URL }} ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
+          docker run --rm --entrypoint pytest -e API_BASE_URL=${{ secrets.AWS_STARWARSAPP_API_BASE_URL }} ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
 
       - name: Tag Docker Image
         run: |
@@ -49,3 +49,6 @@ jobs:
         run: | 
           docker push ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
 
+      - name: Update Lambda Function
+        run: | 
+          aws lambda update-function-code --function-name ${{ AWS_STARWARSAPP_LAMBDA_FUNCTION_NAME }} --image-uri ${{ secrets.AWS_STARWARSAPP_ECR_URI }}/${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }}
