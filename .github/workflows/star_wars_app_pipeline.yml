@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker run --rm --entrypoint pytest ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} var/task/tests
+          docker run --rm --entrypoint pytest ${{ secrets.AWS_STARWARSAPP_IMAGE_NAME }}:${{ secrets.AWS_STARWARSAPP_IMAGE_TAG }} /var/task/tests
 
       - name: Tag Docker Image
         run: |
